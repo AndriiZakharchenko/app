@@ -1,10 +1,14 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">Home</router-link>
+      <router-link to="/create-task">Create task</router-link>
+      <router-link to="/login">Login</router-link>
+      <router-link to="/registration">Registration</router-link>
     </div>
-    <router-view/>
+    <transition name="fade" mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -21,6 +25,7 @@
   padding: 30px;
 
   a {
+    margin-right: 15px;
     font-weight: bold;
     color: #2c3e50;
 
@@ -28,5 +33,11 @@
       color: #42b983;
     }
   }
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s ease-out;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
