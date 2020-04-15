@@ -27,12 +27,13 @@
         <div class="error" v-show="!$v.password.minLength">Password must have at least {{ $v.password.$params.minLength.min }} letters.</div>
       </fieldset>
       <div class="button-wrap">
-        <md-button class="md-raised" type="submit" :disabled="submitStatus === 'PENDING'">Login</md-button>
-        <md-progress-spinner v-if="submitStatus === 'PENDING'" :md-diameter="20" :md-stroke="3" md-mode="indeterminate"></md-progress-spinner>
+        <md-button class="md-raised" type="submit" :disabled="getLoading">
+          <span v-if="getLoading">Sending...</span>
+          <span v-else>Login</span>
+        </md-button>
+        <md-progress-spinner v-if="getLoading" :md-diameter="20" :md-stroke="3" md-mode="indeterminate"></md-progress-spinner>
       </div>
-      <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission!</p>
-      <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
-      <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+      <p style="text-align: center">{{ submitStatus }}</p>
     </form>
     <div>Need registration? <router-link to="/registration">Enter here</router-link> </div>
   </div>
@@ -60,10 +61,18 @@
         minLength: minLength(6)
       },
     },
+    computed: {
+      getLoading() {
+        return this.$store.getters.getLoading;
+      },
+      getError() {
+        return this.$store.getters.getError;
+      },
+    },
     methods: {
       onSubmit() {
-        console.log('submit!')
-        this.$v.$touch()
+        console.log('submit!');
+        this.$v.$touch();
         if (this.$v.$invalid) {
           this.submitStatus = 'ERROR'
         } else {
@@ -71,11 +80,15 @@
             email: this.email,
             password: this.password
           };
-          console.log(user);
-          this.submitStatus = 'PENDING';
-          setTimeout(() => {
-            this.submitStatus = 'OK'
-          }, 1500)
+          this.$store.dispatch('loginUser', user)
+            .then(() => {
+              console.log('LOGIN');
+              this.submitStatus = 'OK';
+              this.$router.push('/');
+            })
+            .catch((err) => {
+              this.submitStatus = err;
+            })
         }
       }
     }

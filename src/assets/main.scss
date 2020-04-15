@@ -1,3 +1,32 @@
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+#nav,
+.nav {
+  padding: 30px;
+
+  a {
+    margin-right: 15px;
+    font-weight: bold;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s ease-out;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 .film {
   margin: 50px auto;
   max-width: 500px;

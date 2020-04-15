@@ -56,11 +56,6 @@ export default {
       ]
     };
   },
-  computed: {
-    // films() {
-    //   return this.$store.getters.getFilms;
-    // }
-  },
   methods: {
     newFilm() {
       if (!this.title || !this.description) {

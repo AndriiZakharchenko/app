@@ -38,12 +38,13 @@
         <div class="error" v-show="!$v.repeatPassword.sameAsPassword">Passwords must be identical.</div>
       </fieldset>
       <div class="button-wrap">
-        <md-button class="md-raised" type="submit" :disabled="submitStatus === 'PENDING'">Registration</md-button>
-        <md-progress-spinner v-if="submitStatus === 'PENDING'" :md-diameter="20" :md-stroke="3" md-mode="indeterminate"></md-progress-spinner>
+        <md-button class="md-raised" type="submit" :disabled="getLoading">
+          <span v-if="getLoading">Sending...</span>
+          <span v-else>Registration</span>
+        </md-button>
+        <md-progress-spinner v-if="getLoading" :md-diameter="20" :md-stroke="3" md-mode="indeterminate"></md-progress-spinner>
       </div>
-      <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission!</p>
-      <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
-      <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+      <p style="text-align: center">{{ submitStatus }}</p>
     </form>
     <div>Do you have account? <router-link to="/login">Login</router-link> </div>
   </div>
@@ -59,7 +60,7 @@
         email: '',
         password: '',
         repeatPassword: '',
-        submitStatus: null
+        submitStatus: ''
       }
     },
     validations: {
@@ -75,6 +76,14 @@
         sameAsPassword: sameAs('password')
       }
     },
+    computed: {
+      getLoading() {
+        return this.$store.getters.getLoading;
+      },
+      getError() {
+        return this.$store.getters.getError;
+      },
+    },
     methods: {
       onSubmit() {
         console.log('submit!');
@@ -86,11 +95,15 @@
             email: this.email,
             password: this.password
           };
-          console.log(user);
-          this.submitStatus = 'PENDING';
-          this.$store.dispatch('registerUser', user);
-          this.submitStatus = 'PENDING';
-          this.submitStatus = 'OK'
+          this.$store.dispatch('registerUser', user)
+            .then(() => {
+              console.log('REGISTER');
+              this.submitStatus = 'OK';
+              this.$router.push('/');
+            })
+            .catch((err) => {
+              this.submitStatus = err;
+            })
         }
       }
     }

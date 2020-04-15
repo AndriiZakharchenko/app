@@ -13,11 +13,11 @@ export default {
       }
     ]
   },
-  mutations: {},
-  actions: {},
   getters: {
     getFilms(state) {
       return state.films;
-    }
-  }
+    },
+  },
+  actions: {},
+  mutations: {},
 };

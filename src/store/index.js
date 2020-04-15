@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import common from './common';
-import user from './user';
-import films from './films';
+import app from './modules/app';
+import user from './modules/user/user';
+import films from './modules/films';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  modules: [
-    common,
+  modules: {
+    app,
     user,
-    films
-  ]
+    films,
+  },
+  strict: process.env.NODE_ENV !== 'production'
 })

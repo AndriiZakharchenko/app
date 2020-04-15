@@ -1,10 +1,18 @@
 <template>
   <div id="app">
+    <p>Authorized: {{ checkUser }}</p>
     <div id="nav">
-      <router-link to="/">Home</router-link>
-      <router-link to="/create-task">Create task</router-link>
-      <router-link to="/login">Login</router-link>
-      <router-link to="/registration">Registration</router-link>
+      <router-link
+        v-for="(link, i) in navLinks"
+        :key="i"
+        :to="{name: `${link.name}`}"
+      >
+        {{ link.to }}
+      </router-link>
+      <a
+        v-if="checkUser"
+         @click="logout"
+      >Log out</a>
     </div>
     <transition name="fade" mode="out-in">
       <router-view/>
@@ -12,32 +20,52 @@
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    margin-right: 15px;
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+  import { mapGetters } from 'vuex';
+  export default {
+    computed: {
+      ...mapGetters([
+        'checkUser'
+      ]),
+      navLinks() {
+        if (this.checkUser) {
+          return [
+            {
+              name: 'home',
+              to: 'Home',
+            },
+            {
+              name: 'create-task',
+              to: 'Create task',
+            },
+            {
+              name: 'vuex',
+              to: ' Vuex',
+            },
+            {
+              name: 'vuerouter',
+              to: ' Vuerouter',
+            },
+          ]
+        } else {
+          return [
+            {
+              name: 'login',
+              to: 'Login',
+            },
+            {
+              name: 'registration',
+              to: 'Registration',
+            },
+          ]
+        }
+      }
+    },
+    methods: {
+      logout() {
+        this.$store.dispatch('logoutUser');
+        this.$router.push({name: 'login'});
+      }
     }
   }
-}
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .2s ease-out;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>
+</script>
