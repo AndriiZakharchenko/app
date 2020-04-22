@@ -1,5 +1,9 @@
 <template>
   <div>
+    <md-snackbar class="md-theme-demo-light" md-position="center" :md-duration="1000" :md-active.sync="showStatus" md-persistent>
+      <span>{{ status }}</span>
+    </md-snackbar>
+
     <h1>Login</h1>
     <form @submit.prevent="onSubmit">
       <fieldset :class="{ 'input-error': $v.email.$error }">
@@ -27,20 +31,20 @@
         <div class="error" v-show="!$v.password.minLength">Password must have at least {{ $v.password.$params.minLength.min }} letters.</div>
       </fieldset>
       <div class="button-wrap">
-        <md-button class="md-raised" type="submit" :disabled="getLoading">
-          <span v-if="getLoading">Sending...</span>
+        <md-button class="md-raised" type="submit" :disabled="loading">
+          <span v-if="loading">Sending...</span>
           <span v-else>Login</span>
         </md-button>
-        <md-progress-spinner v-if="getLoading" :md-diameter="20" :md-stroke="3" md-mode="indeterminate"></md-progress-spinner>
+        <md-progress-spinner v-if="loading" :md-diameter="20" :md-stroke="3" md-mode="indeterminate"></md-progress-spinner>
       </div>
-      <p style="text-align: center">{{ submitStatus }}</p>
     </form>
-    <div>Need registration? <router-link to="/registration">Enter here</router-link> </div>
+    <div>Need registration? <router-link :to="{name: 'registration'}">Enter here</router-link> </div>
   </div>
 </template>
 
 <script>
-  import { required, email, minLength } from 'vuelidate/lib/validators'
+  import { mapState } from 'vuex';
+  import { required, email, minLength } from 'vuelidate/lib/validators';
 
   export default {
     name: "login",
@@ -48,7 +52,8 @@
       return {
         email: '',
         password: '',
-        submitStatus: null
+        status: '',
+        showStatus: false,
       }
     },
     validations: {
@@ -62,32 +67,33 @@
       },
     },
     computed: {
-      getLoading() {
-        return this.$store.getters.getLoading;
-      },
-      getError() {
-        return this.$store.getters.getError;
-      },
+      ...mapState({
+        loading: state => state.user.loading,
+      }),
     },
     methods: {
       onSubmit() {
-        console.log('submit!');
         this.$v.$touch();
         if (this.$v.$invalid) {
-          this.submitStatus = 'ERROR'
+          this.status = 'Error';
+          this.showStatus = true;
         } else {
           const user = {
             email: this.email,
-            password: this.password
+            password: this.password,
           };
-          this.$store.dispatch('loginUser', user)
+          this.$store.dispatch('user/loginUser', user)
             .then(() => {
-              console.log('LOGIN');
-              this.submitStatus = 'OK';
-              this.$router.push('/');
+              this.status = 'Logging';
+              this.showStatus = true;
+              console.info('Logging');
+              setTimeout(() => {
+                this.$router.push('/');
+              }, 1000);
             })
-            .catch((err) => {
-              this.submitStatus = err;
+            .catch((error) => {
+              this.showStatus = true;
+              this.status = error;
             })
         }
       }

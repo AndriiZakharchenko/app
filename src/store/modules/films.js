@@ -1,4 +1,5 @@
 export default {
+  namespaced: true,
   state: {
     films: [
       {
@@ -10,14 +11,14 @@ export default {
         title: 'Game of thrones',
         description: 'Best serials',
         completed: false,
-      }
+      },
     ]
   },
-  getters: {
-    getFilms(state) {
-      return state.films;
-    },
-  },
+  getters: {},
   actions: {},
-  mutations: {},
+  mutations: {
+    addFilm(state, payload) {
+      state.films.push(payload);
+    }
+  },
 };

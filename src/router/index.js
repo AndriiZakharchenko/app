@@ -1,25 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '../store'
+// import store from '../store'
 
 import Home from '@/pages/home.vue'
 
 Vue.use(VueRouter);
 
-const UserProfile = { template: '<div>Profile</div>' };
-const UserPosts = { template: '<div>Posts</div>' };
+const UserProfile = { render(h) {return h('div', 'Profile')}};
+const UserPosts = { render(h) {return h('div', 'User')}};
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: Home,
-    // meta: {
-    //   requiresAuth: true
-    // }
-    // beforeEnter(to, from, next) {
-    //   store.getters.checkUser ? next() : next('/login');
-    // },
   },
   {
     path: '/create-task',
@@ -38,12 +32,14 @@ const routes = [
     children: [
       {
         path: 'profile',
+        name: 'profile',
         component: UserProfile
       },
       {
         path: 'posts',
+        name: 'posts',
         component: UserPosts
-      }
+      },
     ]
   },
   {
@@ -69,10 +65,10 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.name !== 'login' && !store.getters.checkUser) {
-    next({ name: 'login' });
-  } else next()
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.name !== 'login' && !store.getters['user/checkUser']) {
+//     next({ name: 'login' });
+//   } else next()
+// });
 
 export default router

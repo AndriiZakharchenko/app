@@ -3,8 +3,11 @@ import firebase from 'firebase/app'
 import User from './user_help.js'
 
 export default {
+  namespaced: true,
   state: {
-    user: null
+    user: null,
+    loading: false,
+    error: null,
   },
   getters: {
     user(state) {
@@ -45,16 +48,24 @@ export default {
     },
     loggedUser({commit}, payload) {
       commit('setUser', new User(payload.uid));
-      console.log(payload.uid);
     },
     logoutUser({commit}) {
       firebase.auth().signOut();
       commit('setUser', null);
-    }
+    },
   },
   mutations: {
     setUser(state, payload) {
       state.user = payload;
-    }
+    },
+    setLoading(state, payload) {
+      state.loading = payload;
+    },
+    setError(state, payload) {
+      state.error = payload;
+    },
+    clearError(state) {
+      state.error = null;
+    },
   }
 };

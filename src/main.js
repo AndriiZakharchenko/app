@@ -20,9 +20,9 @@ Vue.use(Vuelidate);
 Vue.config.productionTip = false;
 
 new Vue({
+  render: h => h(App),
   router,
   store,
-  render: h => h(App),
   created() {
     const firebaseConfig = {
       apiKey: "AIzaSyDElO0vaF7RrBDyN8aJlCYZrkSeATnCf3A",
@@ -38,8 +38,13 @@ new Vue({
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.$store.dispatch('loggedUser', user);
+        this.$store.dispatch('user/loggedUser', user);
       }
     })
+    // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL(user => {
+    //   if (user) {
+    //     this.$store.dispatch('user/loggedUser', user);
+    //   }
+    // }));
   }
-}).$mount('#app')
+}).$mount('#app');

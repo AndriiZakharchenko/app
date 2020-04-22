@@ -1,24 +1,6 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-    <form>
-      <fieldset>
-        <label>Film title</label>
-        <input
-          type="text"
-          v-model="title"
-          @keyup.enter="newFilm"
-        >
-      </fieldset>
-      <fieldset>
-        <label>Film description</label>
-        <input
-          type="text"
-          v-model="description"
-          @keyup.enter="newFilm"
-        >
-      </fieldset>
-    </form>
     <div class="film">
       <div
         class="film__item"
@@ -35,44 +17,14 @@
 </template>
 
 <script>
-// @ is an alias to /src
+import { mapState } from 'vuex';
+
 export default {
   name: 'Home',
-  data() {
-    return {
-      title: '',
-      description: '',
-      films: [
-        {
-          title: 'GrowthBusters: Hooked on Growth',
-          description: 'I directed this documentary challenging the myths linking growth with prosperity and fulfillment. It explores how our beliefs about economic and consumption',
-          completed: true,
-        },
-        {
-          title: 'Game of thrones',
-          description: 'Best serials',
-          completed: false,
-        }
-      ]
-    };
-  },
-  methods: {
-    newFilm() {
-      if (!this.title || !this.description) {
-        console.error('Empty data');
-        return;
-      }
-      const film = {
-        title: this.title,
-        description: this.description,
-        completed: false,
-      };
-      this.films.push(film);
-      console.info('Push new film');
-    }
+  computed: {
+    ...mapState({
+      films: state => state.films.films,
+    }),
   }
 }
 </script>
-
-<style lang="scss">
-</style>

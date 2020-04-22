@@ -5,57 +5,57 @@
       <router-link
         v-for="(link, i) in navLinks"
         :key="i"
-        :to="{name: `${link.name}`}"
-      >
-        {{ link.to }}
-      </router-link>
+        :to="{ name: `${link.to}` }"
+      >{{ link.name }}</router-link>
       <a
         v-if="checkUser"
-         @click="logout"
+        @click="logout"
       >Log out</a>
     </div>
     <transition name="fade" mode="out-in">
-      <router-view/>
+      <router-view />
     </transition>
   </div>
 </template>
 
 <script>
+  // @ is an alias to /src
   import { mapGetters } from 'vuex';
+
   export default {
     computed: {
-      ...mapGetters([
-        'checkUser'
-      ]),
+      ...mapGetters({
+        checkUser: 'user/checkUser',
+      }),
       navLinks() {
         if (this.checkUser) {
           return [
             {
-              name: 'home',
-              to: 'Home',
+              to: 'home',
+              name: 'Home',
             },
             {
-              name: 'create-task',
-              to: 'Create task',
+              to: 'create-task',
+              name: 'Create task',
             },
             {
-              name: 'vuex',
-              to: ' Vuex',
+              to: 'vuex',
+              name: 'Vuex',
             },
             {
-              name: 'vuerouter',
-              to: ' Vuerouter',
+              to: 'vuerouter',
+              name: 'Vuerouter',
             },
           ]
         } else {
           return [
             {
-              name: 'login',
-              to: 'Login',
+              to: 'login',
+              name: 'Login',
             },
             {
-              name: 'registration',
-              to: 'Registration',
+              to: 'registration',
+              name: 'Registration',
             },
           ]
         }
@@ -63,7 +63,8 @@
     },
     methods: {
       logout() {
-        this.$store.dispatch('logoutUser');
+        this.$store.dispatch('user/logoutUser');
+        console.info('Logout');
         this.$router.push({name: 'login'});
       }
     }

@@ -1,15 +1,13 @@
 <template>
   <div>
     <h1>Vuex</h1>
-    <!--    {{ $store.getters.getLoading }}-->
-        {{ $store.state.app.loading }}
-    <button @click="$store.commit('setLoading', true)">Change state</button>
-    <form action="">
-      <input type="text" v-model="message">
+    {{ loading }}
+    <button @click="setLoading">Change state</button>
+    <form>
+      <input type="text" v-model.trim="message">
       <br>
       <p>V model in vuex - {{ message }}</p>
     </form>
-    <!--    <p>Namespaced: true - {{ $store.getters['user/getTest'] }}</p>-->
   </div>
 </template>
 
@@ -21,30 +19,21 @@
       return {};
     },
     computed: {
-      // getLoading() {
-      //   return this.$store.getters.getLoading;
-      // }
-      // ...mapGetters({
-      //   'checkUser': 'checkUser'
-      // }),
-      // checkUser() {
-      //   return this.$store.getters.checkUser;
-      // },
       ...mapState ({
         loading: state => state.app.loading,
       }),
       message: {
         get () {
-          return this.$store.state.app.message
+          return this.$store.state.app.message;
         },
         set (val) {
-          this.$store.commit('updateMessage', val)
+          this.$store.commit('app/updateMessage', val);
         }
       }
     },
     methods: {
       setLoading() {
-        this.$store.commit('setLoading', true);
+        this.$store.commit('app/setLoading', true);
       }
     }
   }

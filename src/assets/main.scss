@@ -108,6 +108,16 @@ fieldset:not(.input-error) .error {
   stroke: red;
 }
 
+.md-snackbar {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+
+  span {
+    width: 100%;
+  }
+}
+
 .button-wrap {
   display: flex;
   align-items: center;
