@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import store from '../store'
+import store from '../store'
 
 import Home from '@/pages/home.vue'
 
@@ -14,21 +14,25 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home,
+    meta: { requiresAuth: true },
   },
   {
     path: '/create-task',
     name: 'create-task',
     component: () => import('@/pages/create-task.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/vuex',
     name: 'vuex',
     component: () => import('@/pages/vuex.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/vuerouter',
     name: 'vuerouter',
     component: () => import('@/pages/vuerouter.vue'),
+    meta: { requiresAuth: true },
     children: [
       {
         path: 'profile',
@@ -65,10 +69,13 @@ const router = new VueRouter({
   routes
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.name !== 'login' && !store.getters['user/checkUser']) {
-//     next({ name: 'login' });
-//   } else next()
-// });
+router.beforeEach((to, from, next) => {
+  const currentUser = store.getters['user/checkUser'];
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth && !currentUser) next({name: 'login'});
+  else if (!requiresAuth && currentUser) next({name: 'home'});
+  else next();
+});
 
 export default router

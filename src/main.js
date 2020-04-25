@@ -19,32 +19,29 @@ Vue.use(Vuelidate);
 
 Vue.config.productionTip = false;
 
-new Vue({
-  render: h => h(App),
-  router,
-  store,
-  created() {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDElO0vaF7RrBDyN8aJlCYZrkSeATnCf3A",
-      authDomain: "film-library-92d9c.firebaseapp.com",
-      databaseURL: "https://film-library-92d9c.firebaseio.com",
-      projectId: "film-library-92d9c",
-      storageBucket: "film-library-92d9c.appspot.com",
-      messagingSenderId: "711120086311",
-      appId: "1:711120086311:web:25e93287e1b35404437502"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+let app = '';
 
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.$store.dispatch('user/loggedUser', user);
-      }
-    })
-    // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL(user => {
-    //   if (user) {
-    //     this.$store.dispatch('user/loggedUser', user);
-    //   }
-    // }));
+firebase.initializeApp({
+  apiKey: "AIzaSyDElO0vaF7RrBDyN8aJlCYZrkSeATnCf3A",
+  authDomain: "film-library-92d9c.firebaseapp.com",
+  databaseURL: "https://film-library-92d9c.firebaseio.com",
+  projectId: "film-library-92d9c",
+  storageBucket: "film-library-92d9c.appspot.com",
+  messagingSenderId: "711120086311",
+  appId: "1:711120086311:web:25e93287e1b35404437502"
+});
+
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    store.dispatch('user/loggedUser', user);
   }
-}).$mount('#app');
+
+  if (!app) {
+    app = new Vue({
+      router,
+      store,
+      render: h => h(App),
+    }).$mount('#app');
+  }
+});
+

@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <p>Authorized: {{ checkUser }}</p>
+    <br>
+    <b>Authorized: {{ checkUser }}</b>
+    <br>
+    <b>{{ $store.getters['user/checkUser'] }}</b>
     <div id="nav">
       <router-link
         v-for="(link, i) in navLinks"
@@ -45,6 +48,10 @@
             {
               to: 'vuerouter',
               name: 'Vuerouter',
+            },
+            {
+              to: 'login',
+              name: 'Login',
             },
           ]
         } else {
