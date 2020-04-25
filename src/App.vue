@@ -2,8 +2,7 @@
   <div id="app">
     <br>
     <b>Authorized: {{ checkUser }}</b>
-    <br>
-    <b>{{ $store.getters['user/checkUser'] }}</b>
+    <!--    <b>{{ $store.getters['user/checkUser'] }}</b>-->
     <div id="nav">
       <router-link
         v-for="(link, i) in navLinks"
@@ -42,16 +41,12 @@
               name: 'Create task',
             },
             {
-              to: 'vuex',
-              name: 'Vuex',
-            },
-            {
               to: 'vuerouter',
               name: 'Vuerouter',
             },
             {
-              to: 'login',
-              name: 'Login',
+              to: 'vuex',
+              name: 'Vuex & Axios',
             },
           ]
         } else {

@@ -19,8 +19,6 @@ Vue.use(Vuelidate);
 
 Vue.config.productionTip = false;
 
-let app = '';
-
 firebase.initializeApp({
   apiKey: "AIzaSyDElO0vaF7RrBDyN8aJlCYZrkSeATnCf3A",
   authDomain: "film-library-92d9c.firebaseapp.com",
@@ -36,12 +34,10 @@ firebase.auth().onAuthStateChanged((user) => {
     store.dispatch('user/loggedUser', user);
   }
 
-  if (!app) {
-    app = new Vue({
-      router,
-      store,
-      render: h => h(App),
-    }).$mount('#app');
-  }
+  new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount('#app');
 });
 

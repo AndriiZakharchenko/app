@@ -5,7 +5,13 @@ export default {
     message: '',
   },
   getters: {},
-  actions: {},
+  actions: {
+    // getPosts({commit}) {
+    //   axios.get(url).then(response => {
+    //     commit('setPosts', response.data)
+    //   })
+    // }
+  },
   mutations: {
     setLoading(state, payload) {
       state.loading = payload;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Vuex</h1>
+    <h1>Vuex & Axios</h1>
     {{ loading }}
     <button @click="setLoading">Change state</button>
     <form>

@@ -7,13 +7,13 @@
 
 <script>
   export default {
-    name: "404"
+    name: "error"
   }
 </script>
 
 <style scoped>
   h1  {
-    margin-top: 200px;
+    margin-top: 150px;
     margin-bottom: 40px;
   }
 </style>

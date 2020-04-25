@@ -58,8 +58,8 @@ const routes = [
   },
   {
     path: '*',
-    name: '404',
-    component: () => import('@/pages/404.vue'),
+    name: 'error',
+    component: () => import('@/pages/error.vue'),
   },
 ];
 
@@ -71,11 +71,11 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const currentUser = store.getters['user/checkUser'];
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAuth = to.matched[0].meta.requiresAuth;
 
   if (requiresAuth && !currentUser) next({name: 'login'});
-  else if (!requiresAuth && currentUser) next({name: 'home'});
+  else if (!requiresAuth && currentUser) next(from.name);
   else next();
 });
 
-export default router
+export default router;
