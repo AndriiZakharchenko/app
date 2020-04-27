@@ -6,13 +6,13 @@
 </template>
 
 <script>
-  export default {
-    name: "error"
-  }
+export default {
+  name: 'error',
+};
 </script>
 
 <style scoped>
-  h1  {
+  h1 {
     margin-top: 150px;
     margin-bottom: 40px;
   }

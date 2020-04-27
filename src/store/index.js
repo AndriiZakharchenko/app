@@ -1,11 +1,11 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-import app from './modules/app';
-import user from './modules/user/user';
-import films from './modules/films';
+import Vue from 'vue';
+import Vuex from 'vuex';
 
 Vue.use(Vuex);
+
+import app from './modules/app';
+import user from './modules/user';
+import films from './modules/films';
 
 export default new Vuex.Store({
   modules: {
@@ -13,5 +13,5 @@ export default new Vuex.Store({
     user,
     films,
   },
-  strict: process.env.NODE_ENV !== 'production'
-})
+  strict: process.env.NODE_ENV !== 'production',
+});

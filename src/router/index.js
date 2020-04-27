@@ -14,35 +14,55 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home,
-    meta: { requiresAuth: true },
+    meta: {
+      requiresAuth: true,
+      guest : false,
+    },
   },
   {
     path: '/create-task',
     name: 'create-task',
     component: () => import('@/pages/create-task.vue'),
-    meta: { requiresAuth: true },
+    meta: {
+      requiresAuth: true,
+      guest : false,
+    },
   },
   {
     path: '/vuex',
     name: 'vuex',
     component: () => import('@/pages/vuex.vue'),
-    meta: { requiresAuth: true },
+    meta: {
+      requiresAuth: true,
+      guest : false,
+    },
   },
   {
     path: '/vuerouter',
     name: 'vuerouter',
     component: () => import('@/pages/vuerouter.vue'),
-    meta: { requiresAuth: true },
+    meta: {
+      requiresAuth: true,
+      guest : false,
+    },
     children: [
       {
         path: 'profile',
         name: 'profile',
-        component: UserProfile
+        component: UserProfile,
+        meta: {
+          requiresAuth: true,
+          guest : false,
+        },
       },
       {
         path: 'posts',
         name: 'posts',
-        component: UserPosts
+        component: UserPosts,
+        meta: {
+          requiresAuth: true,
+          guest : false,
+        },
       },
     ]
   },
@@ -70,12 +90,22 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const currentUser = store.getters['user/checkUser'];
-  const requiresAuth = to.matched[0].meta.requiresAuth;
+  const isAuthenticated = store.getters['user/isAuthenticated'];
+  const requiresAuth = to.meta.requiresAuth;
 
-  if (requiresAuth && !currentUser) next({name: 'login'});
-  else if (!requiresAuth && currentUser) next(from.name);
-  else next();
+  if (requiresAuth) {
+    if (isAuthenticated) {
+      next();
+      return;
+    }
+    next({name: 'login'});
+  } else {
+    if (isAuthenticated && typeof(to.meta.guest) !== "undefined") {
+      next({name: 'home'});
+      return;
+    }
+    next();
+  }
 });
 
 export default router;

@@ -9,7 +9,7 @@
       >
         <h3>{{ film.title }}</h3>
         <p>{{ film.description }}</p>
-        <input type="checkbox" v-model="film.completed">
+        <input type="checkbox" v-model="film.isCompleted"/>
         <label>Saw</label>
       </div>
     </div>
@@ -25,6 +25,6 @@ export default {
     ...mapState({
       films: state => state.films.films,
     }),
-  }
-}
+  },
+};
 </script>

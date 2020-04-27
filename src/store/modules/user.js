@@ -1,57 +1,56 @@
-import firebase from 'firebase/app'
-
-import User from './user_help.js'
+import firebase from 'firebase/app';
 
 export default {
   namespaced: true,
   state: {
     user: null,
-    loading: false,
+    isLoading: false,
     error: null,
   },
   getters: {
-    user(state) {
-      return state.user;
-    },
-    checkUser(state) {
-      return state.user !== null
+    isAuthenticated(state) {
+      return state.user !== null;
     },
   },
   actions: {
-    async registerUser ({commit}, {email, password}) {
+    async registerUser({commit}, {email, password}) {
       commit('clearError');
       commit('setLoading', true);
       try {
-        // logic
         const user = await firebase.auth().createUserWithEmailAndPassword(email, password);
-        commit('setUser', new User(user.user.uid));
+        commit('setUser', user.user.uid);
         commit('setLoading', false);
       } catch(error) {
         commit('setLoading', false);
         commit('setError', error.message);
-        throw error
+        throw error;
       }
     },
-    async loginUser ({commit}, {email, password}) {
+    async loginUser({commit}, {email, password}) {
       commit('clearError');
       commit('setLoading', true);
       try {
-        // logic
         const user = await firebase.auth().signInWithEmailAndPassword(email, password);
-        commit('setUser', new User(user.user.uid));
+        commit('setUser', user.user.uid);
         commit('setLoading', false);
       } catch(error) {
         commit('setLoading', false);
         commit('setError', error.message);
-        throw error
+        throw error;
       }
     },
     loggedUser({commit}, payload) {
-      commit('setUser', new User(payload.uid));
+      commit('setUser', payload.uid);
     },
-    logoutUser({commit}) {
-      firebase.auth().signOut();
-      commit('setUser', null);
+    async logoutUser({commit}) {
+      commit('clearError');
+      firebase.auth().signOut()
+        .then(() => {
+          commit('setUser', null);
+        })
+        .catch((error) => {
+          commit('setError', error.message);
+        });
     },
   },
   mutations: {
@@ -59,7 +58,7 @@ export default {
       state.user = payload;
     },
     setLoading(state, payload) {
-      state.loading = payload;
+      state.isLoading = payload;
     },
     setError(state, payload) {
       state.error = payload;
@@ -67,5 +66,5 @@ export default {
     clearError(state) {
       state.error = null;
     },
-  }
+  },
 };

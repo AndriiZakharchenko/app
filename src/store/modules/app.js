@@ -1,20 +1,32 @@
+import axios from 'axios';
+
 export default {
   namespaced: true,
   state: {
-    loading: false,
+    isLoading: false,
     message: '',
+    status: '',
+    showStatus: false,
+    posts: [],
   },
   getters: {},
   actions: {
-    // getPosts({commit}) {
-    //   axios.get(url).then(response => {
-    //     commit('setPosts', response.data)
-    //   })
-    // }
+    async getPosts({commit}) {
+      await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=3')
+        .then(response => {
+          commit('addPosts', response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
   },
   mutations: {
     setLoading(state, payload) {
-      state.loading = payload;
+      state.isLoading = payload;
+    },
+    addPosts(state, payload) {
+      state.posts = payload;
     },
     updateMessage(state, payload) {
       state.message = payload;
