@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Vuex & Axios</h1>
-    {{ loading }}
+    {{ isLoading }}
     <br/>
     <md-button class="md-raised" @click="setLoading">Change state</md-button>
     <form>
@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     ...mapState ({
-      loading: state => state.app.loading,
+      isLoading: state => state.app.isLoading,
       posts: state => state.app.posts,
     }),
     message: {

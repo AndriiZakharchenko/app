@@ -1,13 +1,13 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import store from '../store'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import store from '../store';
 
-import Home from '@/pages/home.vue'
+import Home from '@/pages/home.vue';
 
 Vue.use(VueRouter);
 
-const UserProfile = { render(h) {return h('div', 'Profile')}};
-const UserPosts = { render(h) {return h('div', 'User')}};
+const UserProfile = { render(h) {return h('div', 'Profile');}};
+const UserPosts = { render(h) {return h('div', 'User');}};
 
 const routes = [
   {
@@ -23,6 +23,15 @@ const routes = [
     path: '/create-task',
     name: 'create-task',
     component: () => import('@/pages/create-task.vue'),
+    meta: {
+      requiresAuth: true,
+      guest : false,
+    },
+  },
+  {
+    path: '/vee-validate',
+    name: 'vee-validate',
+    component: () => import('@/pages/vee-validate.vue'),
     meta: {
       requiresAuth: true,
       guest : false,
@@ -64,12 +73,12 @@ const routes = [
           guest : false,
         },
       },
-    ]
+    ],
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/pages/login.vue')
+    component: () => import('@/pages/login.vue'),
   },
   {
     path: '/registration',
@@ -86,7 +95,7 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -100,7 +109,7 @@ router.beforeEach((to, from, next) => {
     }
     next({name: 'login'});
   } else {
-    if (isAuthenticated && typeof(to.meta.guest) !== "undefined") {
+    if (isAuthenticated && typeof(to.meta.guest) !== 'undefined') {
       next({name: 'home'});
       return;
     }

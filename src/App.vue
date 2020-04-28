@@ -41,6 +41,10 @@ export default {
             name: 'Create task',
           },
           {
+            to: 'vee-validate',
+            name: 'Vee-validate',
+          },
+          {
             to: 'vuerouter',
             name: 'Vuerouter',
           },
