@@ -82,7 +82,7 @@ router.beforeEach((to, from, next) => {
 
   if (isAuthenticated) {
     if (authPage) {
-      next({name: 'home', query: ['You are logged']});
+      next({name: 'home', query: {message: 'You are logged'}});
       return;
     }
     next();

@@ -1,15 +1,45 @@
 <template>
   <div>
     <h1>Vee validate</h1>
-    <form>
-      <validation-provider rules="positive|min" v-slot="{ errors }">
-        <label>Name</label>
-        <input v-model="name" type="text"/>
-        <span>{{ errors[0] }}</span>
-      </validation-provider>
-      <br/><br/>
-      <md-button type="submit" class="md-raised">Check the field</md-button>
-    </form>
+    <validation-observer
+      v-slot="{ handleSubmit }">
+      <form
+        class="vee-form"
+        @submit.prevent="handleSubmit(onSubmit)"
+        @reset.prevent="reset"
+        novalidate>
+        <validation-provider
+          name="Name"
+          rules="required|alpha"
+          v-slot="{ errors, classes }"
+          tag="div"
+          class="vee-form__item">
+          <label>Name</label>
+          <input
+            :class="classes"
+            v-model="name"
+            type="text"/>
+          <span class="error">{{ errors[0] }}</span>
+        </validation-provider>
+        <validation-provider
+          name="Email"
+          rules="required|email"
+          v-slot="{ errors, classes }"
+          tag="div"
+          class="vee-form__item">
+          <label>Email</label>
+          <input
+            :class="classes"
+            v-model="email"
+            type="email"/>
+          <span class="error">{{ errors[0] }}</span>
+        </validation-provider>
+        <md-button
+          type="submit"
+          class="md-raised"
+        >Check the field</md-button>
+      </form>
+    </validation-observer>
   </div>
 </template>
 
@@ -18,10 +48,18 @@ export default {
   name: 'vee-validate',
   data: () => ({
     name: '',
+    email: '',
   }),
+  methods: {
+    onSubmit() {
+      alert('Form has been submitted!');
+    },
+  },
 };
 </script>
 
 <style scoped>
-
+  .vee-form__item {
+    margin-bottom: 25px;
+  }
 </style>

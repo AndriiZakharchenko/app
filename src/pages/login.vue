@@ -40,14 +40,13 @@
       <div class="button-wrap">
         <md-button
           class="md-raised"
-          type="submit"
-          :disabled="isLoading">
-          <span v-if="!isLoading">Login</span>
+          type="submit">
           <md-progress-spinner
-            v-else
+            v-if="isLoading"
             :md-diameter="16"
             :md-stroke="2"
             md-mode="indeterminate"/>
+          <span v-else>Login</span>
         </md-button>
       </div>
     </form>
@@ -97,8 +96,9 @@ export default {
           .then(() => {
             this.status = 'Logging';
             this.showStatus = true;
-            console.info('Logging');
-            this.$router.push('/');
+            setTimeout(() => {
+              this.$router.push('/');
+            }, 1000);
           })
           .catch((error) => {
             this.showStatus = true;

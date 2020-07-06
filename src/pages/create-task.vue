@@ -66,7 +66,6 @@ export default {
         setTimeout(() => {
           this.$router.push('/');
         }, 1000);
-        console.info('Push new film');
       }
     },
   },

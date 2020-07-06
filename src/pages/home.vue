@@ -33,18 +33,17 @@ import { mapState } from 'vuex';
 export default {
   name: 'Home',
   mounted() {
-    const message = this.$route.query;
-    if (message.length) {
+    const message = this.$route.query.message;
+    const messageBool = !!message;
+    if (messageBool) {
       this.showMessage = true;
-      this.message = message[0];
+      this.message = message;
     }
   },
-  data() {
-    return {
-      message: '',
-      showMessage: false,
-    };
-  },
+  data: () => ({
+    message: '',
+    showMessage: false,
+  }),
   computed: {
     ...mapState({
       films: state => state.films.films,

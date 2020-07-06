@@ -43,8 +43,8 @@ export default {
     setLoading() {
       this.$store.commit('app/setLoading', true);
     },
-    getLists() {
-      this.$store.dispatch('app/getPosts');
+    async getLists() {
+      await this.$store.dispatch('app/getPosts');
     },
   },
 };

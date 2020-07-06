@@ -51,16 +51,15 @@
       <div class="button-wrap">
         <md-button
           class="md-raised"
-          type="submit"
-          :disabled="isLoading">
+          type="submit">
           <span v-if="isLoading">Register...</span>
+          <md-progress-spinner
+            v-if="isLoading"
+            :md-diameter="16"
+            :md-stroke="2"
+            md-mode="indeterminate"/>
           <span v-else>Registration</span>
         </md-button>
-        <md-progress-spinner
-          v-if="isLoading"
-          :md-diameter="20"
-          :md-stroke="3"
-          md-mode="indeterminate"/>
       </div>
     </form>
     <div>Do you have account?
@@ -115,8 +114,9 @@ export default {
           .then(() => {
             this.status = 'Register';
             this.showStatus = true;
-            console.info('Register');
-            this.$router.push('/');
+            setTimeout(() => {
+              this.$router.push('/');
+            }, 1000);
           })
           .catch((error) => {
             this.showStatus = true;
