@@ -14,64 +14,36 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home,
-    meta: {
-      requiresAuth: true,
-      guest : false,
-    },
   },
   {
     path: '/create-task',
     name: 'create-task',
     component: () => import('@/pages/create-task.vue'),
-    meta: {
-      requiresAuth: true,
-      guest : false,
-    },
   },
   {
     path: '/vee-validate',
     name: 'vee-validate',
     component: () => import('@/pages/vee-validate.vue'),
-    meta: {
-      requiresAuth: true,
-      guest : false,
-    },
   },
   {
     path: '/vuex',
     name: 'vuex',
     component: () => import('@/pages/vuex.vue'),
-    meta: {
-      requiresAuth: true,
-      guest : false,
-    },
   },
   {
     path: '/vuerouter',
     name: 'vuerouter',
     component: () => import('@/pages/vuerouter.vue'),
-    meta: {
-      requiresAuth: true,
-      guest : false,
-    },
     children: [
       {
         path: 'profile',
         name: 'profile',
         component: UserProfile,
-        meta: {
-          requiresAuth: true,
-          guest : false,
-        },
       },
       {
         path: 'posts',
         name: 'posts',
         component: UserPosts,
-        meta: {
-          requiresAuth: true,
-          guest : false,
-        },
       },
     ],
   },
@@ -79,11 +51,17 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import('@/pages/login.vue'),
+    meta: {
+      authPage: true,
+    },
   },
   {
     path: '/registration',
     name: 'registration',
     component: () => import('@/pages/registration.vue'),
+    meta: {
+      authPage: true,
+    },
   },
   {
     path: '*',
@@ -100,20 +78,20 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = store.getters['user/isAuthenticated'];
-  const requiresAuth = to.meta.requiresAuth;
+  const authPage = to.meta.authPage;
 
-  if (requiresAuth) {
-    if (isAuthenticated) {
+  if (isAuthenticated) {
+    if (authPage) {
+      next({name: 'home', query: ['You are logged']});
+      return;
+    }
+    next();
+  } else {
+    if (authPage) {
       next();
       return;
     }
     next({name: 'login'});
-  } else {
-    if (isAuthenticated && typeof(to.meta.guest) !== 'undefined') {
-      next({name: 'home'});
-      return;
-    }
-    next();
   }
 });
 

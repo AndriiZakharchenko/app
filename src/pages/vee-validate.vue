@@ -16,11 +16,9 @@
 <script>
 export default {
   name: 'vee-validate',
-  data() {
-    return {
-      name: '',
-    };
-  },
+  data: () => ({
+    name: '',
+  }),
 };
 </script>
 

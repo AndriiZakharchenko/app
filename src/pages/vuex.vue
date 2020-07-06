@@ -25,9 +25,6 @@
 import { mapState } from 'vuex';
 export default {
   name: 'vuex-page',
-  data() {
-    return {};
-  },
   computed: {
     ...mapState ({
       isLoading: state => state.app.isLoading,

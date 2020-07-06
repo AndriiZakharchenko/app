@@ -44,12 +44,13 @@ export default {
     },
     async logoutUser({commit}) {
       commit('clearError');
-      firebase.auth().signOut()
+      await firebase.auth().signOut()
         .then(() => {
           commit('setUser', null);
         })
         .catch((error) => {
           commit('setError', error.message);
+          throw error;
         });
     },
   },

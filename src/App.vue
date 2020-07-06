@@ -1,19 +1,18 @@
 <template>
   <div id="app">
-    <br/>
     <b>Authorized: {{ isAuthenticated }}</b>
-    <!--    <b>{{ $store.getters['user/isAuthenticated'] }}</b>-->
-    <div id="nav">
+    <nav class="nav">
       <router-link
         v-for="(link, i) in navLinks"
         :key="i"
-        :to="{ name: `${link.to}` }"
-      >{{ link.name }}</router-link>
+        :to="{ name: `${link.name}` }"
+      >{{ link.label }}</router-link>
       <a
+        href="#"
         v-if="isAuthenticated"
-        @click="logout"
+        @click.prevent="logout"
       >Log out</a>
-    </div>
+    </nav>
     <transition name="fade" mode="out-in">
       <router-view />
     </transition>
@@ -33,47 +32,46 @@ export default {
       if (this.isAuthenticated) {
         return [
           {
-            to: 'home',
-            name: 'Home',
+            name: 'home',
+            label: 'Home',
           },
           {
-            to: 'create-task',
-            name: 'Create task',
+            name: 'create-task',
+            label: 'Create task',
           },
           {
-            to: 'vee-validate',
-            name: 'Vee-validate',
+            name: 'vee-validate',
+            label: 'Vee-validate',
           },
           {
-            to: 'vuerouter',
-            name: 'Vuerouter',
+            name: 'vuerouter',
+            label: 'Vuerouter',
           },
           {
-            to: 'vuex',
-            name: 'Vuex & Axios',
+            name: 'vuex',
+            label: 'Vuex & Axios',
           },
         ];
       } else {
         return [
           {
-            to: 'login',
-            name: 'Login',
+            name: 'login',
+            label: 'Login',
           },
           {
-            to: 'registration',
-            name: 'Registration',
+            name: 'registration',
+            label: 'Registration',
           },
         ];
       }
     },
   },
   methods: {
-    logout() {
-      this.$store.dispatch('user/logoutUser')
+    async logout() {
+      await this.$store.dispatch('user/logoutUser')
         .then(() => {
-          this.status = 'Logging';
+          this.status = 'Logout';
           this.showStatus = true;
-          console.info('Logout');
           this.$router.push({name: 'login'});
         })
         .catch((error) => {
@@ -84,3 +82,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  b {
+    display: block;
+    padding: 10px;
+    background-color: #AFEEEE;
+  }
+
+  nav {
+    background-color: #E0FFFF;
+  }
+</style>

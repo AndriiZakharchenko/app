@@ -1,21 +1,22 @@
 <template>
   <div>
     <md-snackbar
-class="md-theme-demo-light"
-md-position="center"
-:md-duration="1000"
-:md-active.sync="showStatus"
-md-persistent>
+      class="md-theme-demo-light"
+      md-position="center"
+      :md-duration="4000"
+      :md-active.sync="showStatus"
+      md-persistent>
       <span>{{ status }}</span>
     </md-snackbar>
 
     <h1>Login</h1>
-    <form @submit.prevent="onSubmit">
+    <form @submit.prevent="onSubmit" novalidate>
       <fieldset :class="{ 'input-error': $v.email.$error }">
         <label for="email">Email</label>
         <input
           type="email"
           id="email"
+          name="email"
           placeholder="Enter your email"
           v-model="email"
           @change="$v.email.$touch()"
@@ -28,6 +29,7 @@ md-persistent>
         <input
           type="password"
           id="password"
+          name="password"
           placeholder="Enter your password"
           v-model="password"
           @change="$v.password.$touch()"
@@ -40,14 +42,13 @@ md-persistent>
           class="md-raised"
           type="submit"
           :disabled="isLoading">
-          <span v-if="isLoading">Sending...</span>
-          <span v-else>Login</span>
+          <span v-if="!isLoading">Login</span>
+          <md-progress-spinner
+            v-else
+            :md-diameter="16"
+            :md-stroke="2"
+            md-mode="indeterminate"/>
         </md-button>
-        <md-progress-spinner
-          v-if="isLoading"
-          :md-diameter="20"
-          :md-stroke="3"
-          md-mode="indeterminate"/>
       </div>
     </form>
     <div>Need registration? <router-link :to="{name: 'registration'}">Enter here</router-link> </div>
@@ -60,14 +61,12 @@ import { required, email, minLength } from 'vuelidate/lib/validators';
 
 export default {
   name: 'login',
-  data() {
-    return {
-      email: '',
-      password: '',
-      status: '',
-      showStatus: false,
-    };
-  },
+  data: () => ({
+    email: '',
+    password: '',
+    status: '',
+    showStatus: false,
+  }),
   validations: {
     email: {
       required,
@@ -84,7 +83,7 @@ export default {
     }),
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.status = 'Error';
@@ -94,14 +93,12 @@ export default {
           email: this.email,
           password: this.password,
         };
-        this.$store.dispatch('user/loginUser', user)
+        await this.$store.dispatch('user/loginUser', user)
           .then(() => {
             this.status = 'Logging';
             this.showStatus = true;
             console.info('Logging');
-            setTimeout(() => {
-              this.$router.push('/');
-            }, 1000);
+            this.$router.push('/');
           })
           .catch((error) => {
             this.showStatus = true;

@@ -3,7 +3,7 @@
     <md-snackbar
       class="md-theme-demo-light"
       md-position="center"
-      :md-duration="1000"
+      :md-duration="4000"
       :md-active.sync="showStatus"
       md-persistent>
       <span>{{ status }}</span>
@@ -75,15 +75,13 @@ import {email, sameAs, minLength, required} from 'vuelidate/lib/validators';
 
 export default {
   name: 'registration',
-  data() {
-    return {
-      email: '',
-      password: '',
-      repeatPassword: '',
-      status: '',
-      showStatus: false,
-    };
-  },
+  data: () => ({
+    email: '',
+    password: '',
+    repeatPassword: '',
+    status: '',
+    showStatus: false,
+  }),
   validations: {
     email: {
       required,
@@ -103,7 +101,7 @@ export default {
     }),
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.status = 'Error';
@@ -113,14 +111,12 @@ export default {
           email: this.email,
           password: this.password,
         };
-        this.$store.dispatch('user/registerUser', user)
+        await this.$store.dispatch('user/registerUser', user)
           .then(() => {
             this.status = 'Register';
             this.showStatus = true;
             console.info('Register');
-            setTimeout(() => {
-              this.$router.push('/');
-            }, 1000);
+            this.$router.push('/');
           })
           .catch((error) => {
             this.showStatus = true;

@@ -5,7 +5,7 @@
       <md-snackbar
         class="md-theme-demo-light"
         md-position="center"
-        :md-duration="1000"
+        :md-duration="4000"
         :md-active.sync="showStatus"
         md-persistent>
         <span>{{ status }}</span>
@@ -37,14 +37,12 @@
 import {required} from 'vuelidate/lib/validators';
 
 export default {
-  data() {
-    return {
-      title: '',
-      description: '',
-      status: '',
-      showStatus: false,
-    };
-  },
+  data: () => ({
+    title: '',
+    description: '',
+    status: '',
+    showStatus: false,
+  }),
   validations: {
     title: {
       required,
