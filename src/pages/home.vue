@@ -11,9 +11,9 @@
     </md-snackbar>
     <h1>Home</h1>
     <div class="filter-list">
-      <a href="#" ref="defaultFilter" @click="filterFilms('all', $event)" :class="{active: currentFilter == 'all'}">All</a>
-      <a href="#" @click="filterFilms('completed', $event)" :class="{active: currentFilter == 'completed'}">Completed</a>
-      <a href="#" @click="filterFilms('active', $event)" :class="{active: currentFilter == 'active'}">Active</a>
+      <a href="#" ref="defaultFilter" @click="filterFilms('all')" :class="{active: currentFilter === 'all'}">All</a>
+      <a href="#" @click="filterFilms('completed')" :class="{active: currentFilter === 'completed'}">Completed</a>
+      <a href="#" @click="filterFilms('active')" :class="{active: currentFilter === 'active'}">Active</a>
     </div>
     <div class="film">
       <transition-group enter-active-class="animated fadeInUp" leave-active-class="animated fadeInDown">

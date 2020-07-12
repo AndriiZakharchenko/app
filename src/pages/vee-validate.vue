@@ -10,7 +10,7 @@
         novalidate
       >
         <validation-provider
-          name="Name"
+          name="name"
           rules="required|alpha"
           v-slot="{ errors, classes }"
           tag="div"
@@ -25,7 +25,7 @@
           <span class="error" v-if="errors[0]">{{ errors[0] }}</span>
         </validation-provider>
         <validation-provider
-          name="Email"
+          name="email"
           rules="required|email"
           v-slot="{ errors, classes }"
           tag="div"

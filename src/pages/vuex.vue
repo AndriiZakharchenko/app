@@ -10,7 +10,8 @@
       <p>V model in vuex - {{ message }}</p>
     </form>
     <md-button class="md-raised" @click="getLists">
-      Get posts
+      <span v-if="isLoading">Loading...</span>
+      <span v-else>Get posts </span>
     </md-button>
     <ul class="post-list">
       <li v-for="(post, i) in posts" :key="i">
@@ -23,6 +24,7 @@
 
 <script>
 import { mapState } from 'vuex';
+
 export default {
   name: 'vuex-page',
   computed: {
@@ -54,7 +56,7 @@ export default {
   .post-list {
     list-style-type: none;
     max-width: 500px;
-    margin: 50px auto 0;
+    margin: 30px auto 0;
     text-align: left;
 
     li {

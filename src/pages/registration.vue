@@ -71,8 +71,8 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
-import {email, sameAs, minLength, required} from 'vuelidate/lib/validators';
+import { mapState } from 'vuex';
+import { email, sameAs, minLength, required } from 'vuelidate/lib/validators';
 
 export default {
   name: 'registration',

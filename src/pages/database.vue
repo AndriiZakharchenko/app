@@ -31,11 +31,25 @@
       </fieldset>
       <md-button type="submit" class="md-raised">Add</md-button>
     </form>
+    <br>
+    <div class="post">
+      <transition-group enter-active-class="animated fadeInUp" leave-active-class="animated fadeInDown" tag="div">
+        <div
+          class="post__item"
+          v-for="post in posts"
+          :key="post.id"
+        >
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.description }}</p>
+        </div>
+      </transition-group>
+    </div>
   </div>
 </template>
 
 <script>
-import {required} from 'vuelidate/lib/validators';
+import { required } from 'vuelidate/lib/validators';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'database',
@@ -53,7 +67,19 @@ export default {
       required,
     },
   },
+  async created() {
+    await this.$store.dispatch('database/getPosts')
+  },
+  computed: {
+    ...mapState({
+      posts: state => state.database.posts,
+    }),
+  },
   methods: {
+    ...mapActions({
+      getPosts: 'database/getPosts',
+      addPost: 'database/addPost',
+    }),
     onSubmit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -61,7 +87,12 @@ export default {
           title: this.title,
           description: this.description,
         };
-        this.$store.commit('post/addPost', post);
+        this.addPost(post);
+
+        //Reset fields
+        this.title = this.description = '';
+        this.$v.$reset();
+
         this.status = 'Added new post';
         this.showStatus = true;
       }
