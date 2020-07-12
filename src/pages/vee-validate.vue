@@ -2,37 +2,38 @@
   <div>
     <h1>Vee validate</h1>
     <validation-observer
-      v-slot="{ handleSubmit }">
+      v-slot="{ handleSubmit }"
+    >
       <form
         class="vee-form"
         @submit.prevent="handleSubmit(onSubmit)"
-        @reset.prevent="reset"
-        novalidate>
+        novalidate
+      >
         <validation-provider
           name="Name"
           rules="required|alpha"
           v-slot="{ errors, classes }"
           tag="div"
-          class="vee-form__item">
+          class="vee-form__item"
+        >
           <label>Name</label>
           <input
             :class="classes"
             v-model="name"
-            type="text"/>
-          <span class="error">{{ errors[0] }}</span>
+            type="text"
+          />
+          <span class="error" v-if="errors[0]">{{ errors[0] }}</span>
         </validation-provider>
         <validation-provider
           name="Email"
           rules="required|email"
           v-slot="{ errors, classes }"
           tag="div"
-          class="vee-form__item">
+          class="vee-form__item"
+        >
           <label>Email</label>
-          <input
-            :class="classes"
-            v-model="email"
-            type="email"/>
-          <span class="error">{{ errors[0] }}</span>
+          <input :class="classes" v-model="email" type="email"/>
+          <span class="error" v-if="errors[0]">{{ errors[0] }}</span>
         </validation-provider>
         <md-button
           type="submit"

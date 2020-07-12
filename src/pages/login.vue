@@ -5,7 +5,8 @@
       md-position="center"
       :md-duration="4000"
       :md-active.sync="showStatus"
-      md-persistent>
+      md-persistent
+    >
       <span>{{ status }}</span>
     </md-snackbar>
 
@@ -21,8 +22,8 @@
           v-model="email"
           @change="$v.email.$touch()"
         />
-        <div class="error" v-show="!$v.email.required">Password is required.</div>
-        <div class="error" v-show="!$v.email.email">Email must be correct.</div>
+        <div class="error" v-if="!$v.email.required">Password is required.</div>
+        <div class="error" v-if="!$v.email.email">Email must be correct.</div>
       </fieldset>
       <fieldset :class="{ 'input-error': $v.password.$error }">
         <label for="password">Password</label>
@@ -34,18 +35,20 @@
           v-model="password"
           @change="$v.password.$touch()"
         />
-        <div class="error" v-show="!$v.password.required">Password is required.</div>
-        <div class="error" v-show="!$v.password.minLength">Password must have at least {{ $v.password.$params.minLength.min }} letters.</div>
+        <div class="error" v-if="!$v.password.required">Password is required.</div>
+        <div class="error" v-if="!$v.password.minLength">Password must have at least {{ $v.password.$params.minLength.min }} letters.</div>
       </fieldset>
       <div class="button-wrap">
         <md-button
           class="md-raised"
-          type="submit">
+          type="submit"
+        >
           <md-progress-spinner
             v-if="isLoading"
             :md-diameter="16"
             :md-stroke="2"
-            md-mode="indeterminate"/>
+            md-mode="indeterminate"
+          />
           <span v-else>Login</span>
         </md-button>
       </div>

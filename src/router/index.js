@@ -21,6 +21,11 @@ const routes = [
     component: () => import('@/pages/create-task.vue'),
   },
   {
+    path: '/database',
+    name: 'database',
+    component: () => import('@/pages/database.vue'),
+  },
+  {
     path: '/vee-validate',
     name: 'vee-validate',
     component: () => import('@/pages/vee-validate.vue'),

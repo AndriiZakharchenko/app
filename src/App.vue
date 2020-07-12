@@ -40,6 +40,10 @@ export default {
             label: 'Create task',
           },
           {
+            name: 'database',
+            label: 'Database',
+          },
+          {
             name: 'vee-validate',
             label: 'Vee-validate',
           },

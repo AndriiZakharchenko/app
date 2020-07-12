@@ -19,6 +19,9 @@ export default {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/');
     },
   },
+  // beforeRouteUpdate (to, from, next) {
+  //   next();
+  // }
 };
 </script>
 

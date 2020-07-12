@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Add new film</h1>
+    <h1>Database</h1>
     <form @submit.prevent="onSubmit">
       <md-snackbar
         class="md-theme-demo-light"
@@ -12,7 +12,7 @@
         <span>{{ status }}</span>
       </md-snackbar>
       <fieldset :class="{ 'input-error': $v.title.$error }">
-        <label>Film title</label>
+        <label>Post title</label>
         <input
           type="text"
           v-model="title"
@@ -21,7 +21,7 @@
         <div class="error" v-if="!$v.title.required">Title is required.</div>
       </fieldset>
       <fieldset :class="{ 'input-error': $v.description.$error }">
-        <label>Film description</label>
+        <label>Post description</label>
         <input
           type="text"
           v-model="description"
@@ -38,6 +38,7 @@
 import {required} from 'vuelidate/lib/validators';
 
 export default {
+  name: 'database',
   data: () => ({
     title: '',
     description: '',
@@ -56,17 +57,13 @@ export default {
     onSubmit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        const film = {
+        const post = {
           title: this.title,
           description: this.description,
-          completed: false,
         };
-        this.$store.commit('films/addFilm', film);
-        this.status = 'Added new film';
+        this.$store.commit('post/addPost', post);
+        this.status = 'Added new post';
         this.showStatus = true;
-        setTimeout(() => {
-          this.$router.push('/');
-        }, 1000);
       }
     },
   },

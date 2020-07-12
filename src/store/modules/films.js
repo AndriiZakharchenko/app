@@ -10,11 +10,31 @@ export default {
       {
         title: 'Game of thrones',
         description: 'Best serials',
+        isCompleted: true,
+      },
+      {
+        title: 'Future',
+        description: 'Best serials',
         isCompleted: false,
       },
     ],
   },
-  getters: {},
+  getters: {
+    filterFilms(state) {
+      return val => {
+        switch (val) {
+        case 'all':
+          return state.films;
+        case 'completed':
+          return state.films.filter(film => film.isCompleted);
+        case 'active':
+          return state.films.filter(film => !film.isCompleted);
+        default:
+          return state.films.films;
+        }
+      }
+    },
+  },
   actions: {},
   mutations: {
     addFilm(state, payload) {
