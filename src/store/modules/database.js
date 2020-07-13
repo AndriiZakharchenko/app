@@ -9,10 +9,11 @@ export default {
   },
   getters: {},
   actions: {
-    async addPost({dispatch, commit}, payload) {
+    async addPost({commit, dispatch, rootState}, payload) {
       commit('clearError');
       commit('setLoading', true);
-      await firebase.database().ref('posts').push(payload)
+      const user = rootState.user.user;
+      await firebase.database().ref('posts/' + user).push(payload)
         .then(() => {
           dispatch('getPosts');
           commit('setLoading', false);
@@ -22,27 +23,64 @@ export default {
           commit('setError', error.message);
         });
     },
-    async getPosts({commit}) {
+    async editPost({commit, dispatch, rootState}, {title, description, id},) {
       commit('clearError');
       commit('setLoading', true);
-      await firebase.database().ref('posts').once('value')
+      const user = rootState.user.user;
+      await firebase.database().ref('posts/' + user).child(id).update({
+        title,
+        description,
+      })
+        .then(() => {
+          dispatch('getPosts');
+          commit('setLoading', false);
+        })
+        .catch((error) => {
+          commit('setLoading', false);
+          commit('setError', error.message);
+          throw error;
+        });
+    },
+    async deletePost({commit, dispatch, rootState}, id) {
+      commit('clearError');
+      commit('setLoading', true);
+      const user = rootState.user.user;
+      await firebase.database().ref('posts/' + user).child(id).remove()
+        .then(() => {
+          dispatch('getPosts');
+          commit('setLoading', false);
+        })
+        .catch((error) => {
+          commit('setLoading', false);
+          commit('setError', error.message);
+          throw error;
+        });
+    },
+    async getPosts({commit, rootState}) {
+      commit('clearError');
+      commit('setLoading', true);
+      const user = rootState.user.user;
+      await firebase.database().ref('posts/' + user).once('value')
         .then((response) => {
           const tasksArray = [];
           const tasks = response.val();
-          Object.keys(tasks).forEach(key => {
-            tasksArray.push({
-              ...tasks[key],
-              id: key,
+          if (tasks) {
+            Object.keys(tasks).forEach(key => {
+              tasksArray.push({
+                ...tasks[key],
+                id: key,
+              });
             });
-          });
+          }
           commit('fetchPosts', tasksArray);
           commit('setLoading', false);
         })
         .catch((error) => {
           commit('setLoading', false);
           commit('setError', error.message);
+          throw error;
         });
-    }
+    },
   },
   mutations: {
     fetchPosts(state, payload) {
