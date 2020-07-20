@@ -110,6 +110,12 @@ export default {
   },
   async created() {
     await this.$store.dispatch('database/getPosts')
+      .then(() => {})
+      .catch((error) => {
+        this.status = error;
+        this.showStatus = true;
+      })
+
   },
   computed: {
     ...mapState({
@@ -165,7 +171,7 @@ export default {
         await this.editPost(post)
           .then(() => {
             this.showDialog = false;
-            this.status = 'Change current post';
+            this.status = 'Changed current post';
             this.showStatus = true;
           })
           .catch((error) => {
@@ -178,7 +184,7 @@ export default {
     async deleteCurrent(id) {
       await this.deletePost(id)
         .then(() => {
-          this.status = 'Delete current post';
+          this.status = 'Deleted current post';
           this.showStatus = true;
         })
         .catch((error) => {

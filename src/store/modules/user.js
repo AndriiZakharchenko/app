@@ -4,8 +4,6 @@ export default {
   namespaced: true,
   state: {
     user: null,
-    isLoading: false,
-    error: null,
   },
   getters: {
     isAuthenticated(state) {
@@ -14,42 +12,38 @@ export default {
   },
   actions: {
     async registerUser({commit}, {email, password}) {
-      commit('clearError');
-      commit('setLoading', true);
-      try {
-        const user = await firebase.auth().createUserWithEmailAndPassword(email, password);
-        commit('setUser', user.user.uid);
-        commit('setLoading', false);
-      } catch(error) {
-        commit('setLoading', false);
-        commit('setError', error.message);
-        throw error;
-      }
+      commit('app/setLoading', true, { root: true })
+      await firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((res) => {
+          commit('setUser', res.user.uid);
+          commit('app/setLoading', false, { root: true })
+        })
+        .catch((error) => {
+          commit('app/setLoading', false, { root: true })
+          throw error;
+        });
     },
     async loginUser({commit}, {email, password}) {
-      commit('clearError');
-      commit('setLoading', true);
-      try {
-        const user = await firebase.auth().signInWithEmailAndPassword(email, password);
-        commit('setUser', user.user.uid);
-        commit('setLoading', false);
-      } catch(error) {
-        commit('setLoading', false);
-        commit('setError', error.message);
-        throw error;
-      }
+      commit('app/setLoading', true, { root: true })
+      await firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((res) => {
+          commit('setUser', res.user.uid);
+          commit('app/setLoading', false, { root: true })
+        })
+        .catch((error) => {
+          commit('app/setLoading', false, { root: true })
+          throw error;
+        });
     },
     loggedUser({commit}, payload) {
       commit('setUser', payload.uid);
     },
     async logoutUser({commit}) {
-      commit('clearError');
       await firebase.auth().signOut()
         .then(() => {
           commit('setUser', null);
         })
         .catch((error) => {
-          commit('setError', error.message);
           throw error;
         });
     },
@@ -57,15 +51,6 @@ export default {
   mutations: {
     setUser(state, payload) {
       state.user = payload;
-    },
-    setLoading(state, payload) {
-      state.isLoading = payload;
-    },
-    setError(state, payload) {
-      state.error = payload;
-    },
-    clearError(state) {
-      state.error = null;
     },
   },
 };

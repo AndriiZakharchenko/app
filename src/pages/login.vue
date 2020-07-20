@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     ...mapState({
-      isLoading: state => state.user.isLoading,
+      isLoading: state => state.app.isLoading,
     }),
   },
   methods: {

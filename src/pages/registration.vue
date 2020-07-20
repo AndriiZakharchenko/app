@@ -98,14 +98,14 @@ export default {
   },
   computed: {
     ...mapState({
-      isLoading: state => state.user.isLoading,
+      isLoading: state => state.app.isLoading,
     }),
   },
   methods: {
     async onSubmit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.status = 'Error';
+        this.status = 'Error from validations';
         this.showStatus = true;
       } else {
         const user = {
@@ -114,7 +114,7 @@ export default {
         };
         await this.$store.dispatch('user/registerUser', user)
           .then(() => {
-            this.status = 'Register';
+            this.status = 'Registered';
             this.showStatus = true;
             setTimeout(() => {
               this.$router.push('/');

@@ -3,12 +3,10 @@ import axios from 'axios';
 export default {
   namespaced: true,
   state: {
+    posts: [],
     isLoading: false,
-    error: '',
     message: '',
     status: '',
-    showStatus: false,
-    posts: [],
   },
   getters: {},
   actions: {
@@ -16,7 +14,6 @@ export default {
       if (state.posts.length) {
         return;
       }
-      commit('clearError');
       commit('setLoading', true);
       await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=3')
         .then(response => {
@@ -27,19 +24,13 @@ export default {
         })
         .catch((error) => {
           commit('setLoading', false);
-          commit('setError', error.message);
+          throw error;
         });
     },
   },
   mutations: {
     setLoading(state, payload) {
       state.isLoading = payload;
-    },
-    setError(state, payload) {
-      state.error = payload;
-    },
-    clearError(state) {
-      state.error = null;
     },
     addPosts(state, payload) {
       state.posts = payload;
