@@ -5,7 +5,8 @@ import 'firebase/messaging';
 import 'firebase/storage';
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyDElO0vaF7RrBDyN8aJlCYZrkSeATnCf3A',
+  // apiKey: 'AIzaSyDElO0vaF7RrBDyN8aJlCYZrkSeATnCf3A',
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
   authDomain: 'film-library-92d9c.firebaseapp.com',
   databaseURL: 'https://film-library-92d9c.firebaseio.com',
   projectId: 'film-library-92d9c',
