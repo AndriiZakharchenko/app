@@ -3,7 +3,7 @@
     <md-snackbar
       class="md-theme-demo-light"
       md-position="center"
-      :md-duration="4000"
+      :md-duration="40000"
       :md-active.sync="showStatus"
       md-persistent
 >

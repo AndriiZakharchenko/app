@@ -7,6 +7,7 @@ export default {
     isLoading: false,
     message: '',
     status: '',
+    preloader: true,
   },
   getters: {},
   actions: {
@@ -37,6 +38,9 @@ export default {
     },
     updateMessage(state, payload) {
       state.message = payload;
+    },
+    removePreloader(state, payload) {
+      state.preloader = payload;
     },
   },
 };

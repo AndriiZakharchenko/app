@@ -15,7 +15,10 @@
       <a href="#" @click="filterFilms('completed', $event)">Completed</a>
       <a href="#" @click="filterFilms('active', $event)">Active</a>
     </div>
-    <div class="film">
+    <div
+      class="film"
+      v-if="films.length"
+    >
       <transition-group enter-active-class="animated fadeInUp" leave-active-class="animated fadeInDown">
         <div
           class="film__item"
@@ -33,6 +36,7 @@
         </div>
       </transition-group>
     </div>
+    <h3 v-else>Empty list</h3>
   </div>
 </template>
 

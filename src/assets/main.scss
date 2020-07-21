@@ -24,6 +24,7 @@
 .fade-enter-active, .fade-leave-active {
   transition: .2s ease-out;
 }
+
 .fade-enter, .fade-leave-to {
   opacity: 0;
   transform: scale(0.99);
@@ -50,20 +51,24 @@ $default: #333;
 * {
   box-sizing: border-box;
 }
+
 form {
   max-width: 550px;
   padding: 20px;
   margin: 50px auto;
   text-align: left;
 }
+
 fieldset {
   padding: 15px;
   margin-bottom: 10px;
 }
+
 label {
   display: block;
   margin-bottom: 10px;
 }
+
 input:not([type="checkbox"]) {
   outline: none;
   height: 40px;
@@ -167,3 +172,103 @@ fieldset:not(.input-error) .error {
 
 @keyframes fadeInUp{0%{opacity:0;transform:translate3d(0,20px,0)}to{opacity:1;-webkit-transform:translateZ(0);transform:translateZ(0)}}.fadeInUp{-webkit-animation-name:fadeInUp;animation-name:fadeInUp}
 @keyframes fadeInDown{0%{opacity:1;transform:translate3d(0,-20px,0)}to{opacity:0;-webkit-transform:translateZ(0);transform:translateZ(0)}}.fadeInDown{-webkit-animation-name:fadeInDown;animation-name:fadeInDown}
+
+.md-snackbar.md-position-center {
+  border-radius: 4px;
+  top: 20px;
+  bottom: auto;
+}
+
+/*================================================================================
+PRELOADER
+================================================================================*/
+.icon-load {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  transform: translate3d(0, -100%, 0);
+  transition: 0.6s ease-out;
+}
+
+.active.icon-load {
+  transform: translate3d(0, 0%, 0);
+}
+
+.sk-folding-cube {
+  width: 40px;
+  height: 40px;
+  transform: rotateZ(45deg);
+}
+
+.sk-cube {
+  float: left;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  background: #333;
+  transform: scale(0.94);
+}
+
+.sk-folding-cube .sk-cube:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #AFEEEE;
+  animation: sk-foldCubeAngle 2.4s infinite linear both;
+  transform-origin: 100% 100%;
+}
+
+.sk-folding-cube .sk-cube2 {
+  transform: scale(0.94) rotateZ(90deg)
+}
+
+.sk-folding-cube .sk-cube3 {
+  transform: scale(0.94) rotateZ(180deg)
+}
+
+.sk-folding-cube .sk-cube4 {
+  transform: scale(0.94) rotateZ(270deg)
+}
+
+.sk-folding-cube .sk-cube2:before {
+  animation-delay: .3s
+}
+
+.sk-folding-cube .sk-cube3:before {
+  animation-delay: .6s
+}
+
+.sk-folding-cube .sk-cube4:before {
+  animation-delay: .9s
+}
+
+@keyframes sk-foldCubeAngle {
+
+  0%,
+  10% {
+    transform: perspective(140px) rotateX(-180deg);
+    opacity: 0
+  }
+
+  25%,
+  75% {
+    transform: perspective(140px) rotateX(0deg);
+    opacity: 1
+  }
+
+  90%,
+  100% {
+    transform: perspective(140px) rotateY(180deg);
+    opacity: 0
+  }
+}

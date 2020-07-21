@@ -15,7 +15,6 @@ export default {
       year: 'numeric', month: 'numeric', day: 'numeric',
       hour: 'numeric', minute: 'numeric', second: 'numeric',
       hour12: false,
-      timeZone: 'America/Los_Angeles'
     };
     const interval = setInterval(() => {
       this.date = new Intl.DateTimeFormat('en-US', options).format(new Date())
@@ -32,6 +31,7 @@ export default {
 <style scoped>
   footer {
     padding: 40px 0;
-    background-color: #AFEEEE;
+    background-color: #333;
+    color: #fff;
   }
 </style>
