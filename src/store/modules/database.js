@@ -13,11 +13,12 @@ export default {
       await firebase.database().ref('users/' + user + '/posts').push(payload)
         .then(() => {
           dispatch('getPosts');
-          commit('app/setLoading', false, { root: true });
         })
         .catch((error) => {
-          commit('app/setLoading', false, { root: true });
           throw error;
+        })
+        .finally(() => {
+          commit('app/setLoading', false, { root: true })
         });
     },
     async editPost({commit, dispatch, rootState}, {title, description, id},) {
@@ -29,11 +30,12 @@ export default {
       })
         .then(() => {
           dispatch('getPosts');
-          commit('app/setLoading', false, { root: true });
         })
         .catch((error) => {
-          commit('app/setLoading', false, { root: true });
           throw error;
+        })
+        .finally(() => {
+          commit('app/setLoading', false, { root: true })
         });
     },
     async deletePost({commit, dispatch, rootState}, id) {
@@ -42,11 +44,12 @@ export default {
       await firebase.database().ref('users/' + user + '/posts').child(id).remove()
         .then(() => {
           dispatch('getPosts');
-          commit('app/setLoading', false, { root: true });
         })
         .catch((error) => {
-          commit('app/setLoading', false, { root: true });
           throw error;
+        })
+        .finally(() => {
+          commit('app/setLoading', false, { root: true })
         });
     },
     async getPosts({commit, rootState}) {
@@ -65,12 +68,12 @@ export default {
             });
           }
           commit('fetchPosts', tasksArray);
-          commit('app/setLoading', false, { root: true });
-
         })
         .catch((error) => {
-          commit('app/setLoading', false, { root: true });
           throw error;
+        })
+        .finally(() => {
+          commit('app/setLoading', false, { root: true })
         });
     },
   },

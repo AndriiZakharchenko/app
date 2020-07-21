@@ -16,11 +16,12 @@ export default {
       await firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((res) => {
           commit('setUser', res.user.uid);
-          commit('app/setLoading', false, { root: true })
         })
         .catch((error) => {
-          commit('app/setLoading', false, { root: true })
           throw error;
+        })
+        .finally(() => {
+          commit('app/setLoading', false, { root: true })
         });
     },
     async loginUser({commit}, {email, password}) {
@@ -28,11 +29,12 @@ export default {
       await firebase.auth().signInWithEmailAndPassword(email, password)
         .then((res) => {
           commit('setUser', res.user.uid);
-          commit('app/setLoading', false, { root: true })
         })
         .catch((error) => {
-          commit('app/setLoading', false, { root: true })
           throw error;
+        })
+        .finally(() => {
+          commit('app/setLoading', false, { root: true })
         });
     },
     loggedUser({commit}, payload) {

@@ -1,9 +1,7 @@
 <template>
   <div>
     <h1>Vuex & Axios</h1>
-    {{ isLoading }}
     <br/>
-    <md-button class="md-raised" @click="setLoading">Change state</md-button>
     <form>
       <input type="text" v-model.trim="message"/>
       <br/>
@@ -42,9 +40,6 @@ export default {
     },
   },
   methods: {
-    setLoading() {
-      this.$store.commit('app/setLoading', true);
-    },
     async getLists() {
       await this.$store.dispatch('app/getPosts');
     },
