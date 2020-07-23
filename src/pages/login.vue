@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import { required, email, minLength } from 'vuelidate/lib/validators';
 
 export default {
@@ -85,27 +85,30 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      loginUser: 'user/loginUser',
+    }),
+    ...mapMutations({
+      changeStatus: 'app/changeStatus',
+    }),
     async onSubmit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.status = 'Error';
-        this.showStatus = true;
+        this.changeStatus('Please enter the valid values in the form');
       } else {
         const user = {
           email: this.email,
           password: this.password,
         };
-        await this.$store.dispatch('user/loginUser', user)
+        await this.loginUser(user)
           .then(() => {
-            this.status = 'Logging';
-            this.showStatus = true;
+            this.changeStatus('Logging');
             setTimeout(() => {
               this.$router.push('/');
             }, 1000);
           })
           .catch((error) => {
-            this.showStatus = true;
-            this.status = error;
+            this.changeStatus(error);
           });
       }
     },

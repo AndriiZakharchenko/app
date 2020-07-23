@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'TheHeader',
@@ -68,16 +68,20 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      logoutUser: 'user/logoutUser',
+    }),
+    ...mapMutations({
+      changeStatus: 'app/changeStatus',
+    }),
     async logout() {
-      await this.$store.dispatch('user/logoutUser')
+      await this.logoutUser()
         .then(() => {
-          this.status = 'Logout';
-          this.showStatus = true;
+          this.changeStatus('Logout');
           this.$router.push({name: 'login'});
         })
         .catch((error) => {
-          this.showStatus = true;
-          this.status = error;
+          this.changeStatus(error);
         });
     },
   },

@@ -1,6 +1,8 @@
 <template>
   <div id="app" class="layout">
+    <!--    Preloader    -->
     <div
+      v-if="showPreloader"
       class="icon-load"
       :class="{'active': preloader}"
     >
@@ -12,12 +14,23 @@
       </div>
     </div>
 
+    <!--    Notification    -->
+    <md-snackbar
+      class="md-theme-demo-light"
+      md-position="center"
+      md-persistent
+      :md-duration="4000"
+      :md-active.sync="showStatus"
+    >
+      <span>{{ status }}</span>
+    </md-snackbar>
+
     <the-header />
-    <transition name="fade" mode="out-in">
-      <main>
+    <main>
+      <transition name="fade" mode="out-in">
         <router-view />
-      </main>
-    </transition>
+      </transition>
+    </main>
     <the-footer />
   </div>
 </template>
@@ -29,17 +42,35 @@ import TheFooter from './components/TheFooter';
 import { mapState } from 'vuex';
 
 export default {
-  components: {TheFooter, TheHeader},
+  components: {
+    TheFooter,
+    TheHeader
+  },
   mounted() {
     setTimeout(() => {
       this.$store.commit('app/removePreloader', false);
     }, 1500);
+    setTimeout(() => {
+      this.showPreloader = false;
+    }, 2000);
   },
+  data: () => ({
+    showPreloader: true,
+  }),
   computed: {
     ...mapState({
       preloader: state => state.app.preloader,
+      status: state => state.app.status,
     }),
-  }
+    showStatus: {
+      get() {
+        return this.$store.state.app.showStatus;
+      },
+      set(val) {
+        this.$store.commit('app/clearStatus', val);
+      },
+    },
+  },
 };
 </script>
 
@@ -51,6 +82,7 @@ export default {
 
     main {
       flex: 1;
+      padding: 40px 0;
     }
   }
 </style>

@@ -28,20 +28,20 @@ export default {
   computed: {
     ...mapState ({
       isLoading: state => state.app.isLoading,
-      posts: state => state.app.posts,
+      posts: state => state.posts.posts,
     }),
     message: {
       get() {
         return this.$store.state.app.message;
       },
       set(val) {
-        this.$store.commit('app/updateMessage', val);
+        this.$store.commit('posts/updateMessage', val);
       },
     },
   },
   methods: {
     async getLists() {
-      await this.$store.dispatch('app/getPosts');
+      await this.$store.dispatch('posts/getPosts');
     },
   },
 };

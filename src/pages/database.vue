@@ -1,15 +1,5 @@
 <template>
   <div>
-    <md-snackbar
-      class="md-theme-demo-light"
-      md-position="center"
-      :md-duration="4000"
-      :md-active.sync="showStatus"
-      md-persistent
-    >
-      <span>{{ status }}</span>
-    </md-snackbar>
-
     <h1>Database</h1>
     <md-dialog :md-active.sync="showDialog">
       <md-dialog-title>Post editing</md-dialog-title>
@@ -80,15 +70,13 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators';
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'database',
   data: () => ({
     title: '',
     description: '',
-    status: '',
-    showStatus: false,
     showDialog: false,
     id: '',
     titleEdit: '',
@@ -109,17 +97,13 @@ export default {
     },
   },
   async created() {
-    await this.$store.dispatch('database/getPosts')
-      .then(() => {})
-      .catch((error) => {
-        this.status = error;
-        this.showStatus = true;
-      })
-
+    await this.$store.dispatch('database/getPosts');
   },
   computed: {
     ...mapState({
       posts: state => state.database.posts,
+      showStatus: state => state.app.showStatus,
+      status: state => state.app.status,
     }),
   },
   methods: {
@@ -128,6 +112,9 @@ export default {
       addPost: 'database/addPost',
       editPost: 'database/editPost',
       deletePost: 'database/deletePost',
+    }),
+    ...mapMutations({
+      changeStatus: 'app/changeStatus',
     }),
     async onSubmit() {
       // this.$v.$touch();
@@ -140,16 +127,13 @@ export default {
         };
         await this.addPost(post)
           .then(() => {
-          //Reset fields
+            //Reset fields
             this.title = this.description = '';
             this.$v.$reset();
-
-            this.status = 'Added new post';
-            this.showStatus = true;
+            this.changeStatus('Added new post');
           })
           .catch((error) => {
-            this.status = error;
-            this.showStatus = true;
+            this.changeStatus(error);
           })
       }
     },
@@ -170,27 +154,24 @@ export default {
         };
         await this.editPost(post)
           .then(() => {
-            this.showDialog = false;
-            this.status = 'Changed current post';
-            this.showStatus = true;
+            this.changeStatus('Changed current post');
           })
           .catch((error) => {
+            this.changeStatus(error);
+          }).
+          finally(() => {
             this.showDialog = false;
-            this.status = error;
-            this.showStatus = true;
-          })
+          });
       }
     },
     async deleteCurrent(id) {
       await this.deletePost(id)
         .then(() => {
-          this.status = 'Deleted current post';
-          this.showStatus = true;
+          this.changeStatus('Deleted current post');
         })
         .catch((error) => {
-          this.status = error;
-          this.showStatus = true;
-        })
+          this.changeStatus(error);
+        });
     }
   },
 };

@@ -2,15 +2,6 @@
   <div>
     <h1>Add new film</h1>
     <form @submit.prevent="onSubmit">
-      <md-snackbar
-        class="md-theme-demo-light"
-        md-position="center"
-        :md-duration="4000"
-        :md-active.sync="showStatus"
-        md-persistent
->
-        <span>{{ status }}</span>
-      </md-snackbar>
       <fieldset :class="{ 'input-error': $v.title.$error }">
         <label>Film title</label>
         <input
@@ -36,13 +27,12 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators';
+import { mapMutations } from 'vuex';
 
 export default {
   data: () => ({
     title: '',
     description: '',
-    status: '',
-    showStatus: false,
   }),
   validations: {
     title: {
@@ -53,6 +43,10 @@ export default {
     },
   },
   methods: {
+    ...mapMutations({
+      addFilm: 'films/addFilm',
+      changeStatus: 'app/changeStatus',
+    }),
     onSubmit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -61,9 +55,8 @@ export default {
           description: this.description,
           completed: false,
         };
-        this.$store.commit('films/addFilm', film);
-        this.status = 'Added new film';
-        this.showStatus = true;
+        this.addFilm(film);
+        this.changeStatus('Added new film');
         setTimeout(() => {
           this.$router.push('/');
         }, 1000);

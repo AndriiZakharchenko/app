@@ -18,7 +18,7 @@ export default {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true })
+          commit('app/setLoading', false, { root: true });
         });
     },
     async editPost({commit, dispatch, rootState}, {title, description, id},) {
@@ -70,6 +70,7 @@ export default {
           commit('fetchPosts', tasksArray);
         })
         .catch((error) => {
+          commit('app/changeStatus', error, { root: true })
           throw error;
         })
         .finally(() => {

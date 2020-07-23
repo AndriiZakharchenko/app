@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { email, sameAs, minLength, required } from 'vuelidate/lib/validators';
 
 export default {
@@ -80,8 +80,6 @@ export default {
     email: '',
     password: '',
     repeatPassword: '',
-    status: '',
-    showStatus: false,
   }),
   validations: {
     email: {
@@ -102,11 +100,13 @@ export default {
     }),
   },
   methods: {
+    ...mapMutations({
+      changeStatus: 'app/changeStatus',
+    }),
     async onSubmit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.status = 'Error from validations';
-        this.showStatus = true;
+        this.changeStatus('Please enter the valid values in the form');
       } else {
         const user = {
           email: this.email,
@@ -114,15 +114,13 @@ export default {
         };
         await this.$store.dispatch('user/registerUser', user)
           .then(() => {
-            this.status = 'Registered';
-            this.showStatus = true;
+            this.changeStatus('Registered');
             setTimeout(() => {
               this.$router.push('/');
             }, 1000);
           })
           .catch((error) => {
-            this.showStatus = true;
-            this.status = error;
+            this.changeStatus(error);
           });
       }
     },

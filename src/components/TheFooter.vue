@@ -1,6 +1,8 @@
 <template>
   <footer class="section has-text-centered">
-    <b><i>{{ date }}</i></b>
+    <b>
+      <i>{{ date }}</i>
+    </b>
   </footer>
 </template>
 
@@ -12,8 +14,12 @@ export default {
   }),
   mounted() {
     const options = {
-      year: 'numeric', month: 'numeric', day: 'numeric',
-      hour: 'numeric', minute: 'numeric', second: 'numeric',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
       hour12: false,
     };
     const interval = setInterval(() => {
