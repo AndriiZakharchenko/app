@@ -1,3 +1,5 @@
+import { FILM_FILTERS } from '@/constants/filters';
+
 export default {
   namespaced: true,
   state: {
@@ -18,16 +20,17 @@ export default {
         isCompleted: false,
       },
     ],
+    activeFilter: FILM_FILTERS.all,
   },
   getters: {
     filterFilms(state) {
       return val => {
         switch (val) {
-        case 'all':
+        case FILM_FILTERS.all:
           return state.films;
-        case 'completed':
+        case FILM_FILTERS.completed:
           return state.films.filter(film => film.isCompleted);
-        case 'active':
+        case FILM_FILTERS.active:
           return state.films.filter(film => !film.isCompleted);
         default:
           return state.films.films;
@@ -39,6 +42,9 @@ export default {
   mutations: {
     addFilm(state, payload) {
       state.films.push(payload);
+    },
+    changeFilter(state, payload) {
+      state.activeFilter = payload;
     },
   },
 };

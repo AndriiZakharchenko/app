@@ -1,23 +1,15 @@
 <template>
   <div class="home">
-    <md-snackbar
-      class="md-theme-demo-light"
-      md-position="center"
-      :md-duration="4000"
-      :md-active.sync="showMessage"
-      md-persistent
-    >
-      <span>{{ message }}</span>
-    </md-snackbar>
     <h1>Home</h1>
     <div class="filter-list">
       <a
-href="#"
-ref="defaultFilter"
-@click="filterFilms('all', $event)"
->All</a>
-      <a href="#" @click="filterFilms('completed', $event)">Completed</a>
-      <a href="#" @click="filterFilms('active', $event)">Active</a>
+        role="button"
+        ref="defaultFilter"
+        class="active"
+        @click="filterFilms(FILM_FILTERS.all, $event)"
+      >All</a>
+      <a role="button" @click="filterFilms(FILM_FILTERS.completed, $event)">Completed</a>
+      <a role="button" @click="filterFilms(FILM_FILTERS.active, $event)">Active</a>
     </div>
     <div
       class="film"
@@ -45,25 +37,29 @@ ref="defaultFilter"
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+import { FILM_FILTERS } from '@/constants/filters';
+
 export default {
   name: 'Home',
   mounted() {
     const message = this.$route.query.message;
     const messageBool = !!message;
     if (messageBool) {
-      this.showMessage = true;
-      this.message = message;
+      this.changeStatus(message);
     }
 
-    //Filter list
-    this.$refs.defaultFilter.click();
+    //Default film list
+    this.films = this.$store.state.films.films;
   },
   data: () => ({
-    message: '',
-    showMessage: false,
     films: [],
+    FILM_FILTERS,
   }),
   methods: {
+    ...mapMutations({
+      changeStatus: 'app/changeStatus',
+    }),
     filterFilms(val, event) {
       const filterElements = document.querySelectorAll('.filter-list a');
       filterElements.forEach(elem => elem.classList.remove('active'));
@@ -79,6 +75,7 @@ export default {
     margin-right: 15px;
     font-weight: bold;
     color: #2c3e50;
+    cursor: pointer;
 
     &.active {
       color: #42b983;

@@ -3,11 +3,14 @@
     <h1>Vuex & Axios</h1>
     <br/>
     <form>
-      <input type="text" v-model.trim="message"/>
+      <input type="text" v-model.trim="message" />
       <br/>
       <p>V model in vuex - {{ message }}</p>
     </form>
-    <md-button class="md-raised" @click="getLists">
+    <md-button
+      class="md-raised"
+      @click="getLists"
+    >
       <span v-if="isLoading">Loading...</span>
       <span v-else>Get posts </span>
     </md-button>
@@ -21,7 +24,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'vuex-page',
@@ -32,16 +35,24 @@ export default {
     }),
     message: {
       get() {
-        return this.$store.state.app.message;
+        return this.$store.state.posts.message;
       },
       set(val) {
-        this.$store.commit('posts/updateMessage', val);
+        this.updateMessage(val);
       },
     },
   },
   methods: {
+    ...mapMutations({
+      changeStatus: 'app/changeStatus',
+      updateMessage: 'posts/updateMessage',
+    }),
     async getLists() {
-      await this.$store.dispatch('posts/getPosts');
+      await this.$store.dispatch('posts/getPosts')
+        .then(() => {})
+        .catch((error) => {
+          this.changeStatus(error);
+        });
     },
   },
 };

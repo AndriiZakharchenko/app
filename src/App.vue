@@ -4,7 +4,7 @@
     <div
       v-if="showPreloader"
       class="icon-load"
-      :class="{'active': removePreloader}"
+      :class="{'active': preloader}"
     >
       <div class="sk-folding-cube">
         <div class="sk-cube1 sk-cube"></div>
@@ -36,7 +36,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import TheHeader from './components/TheHeader';
 import TheFooter from './components/TheFooter';
 import { mapState } from 'vuex';
@@ -59,8 +58,8 @@ export default {
   }),
   computed: {
     ...mapState({
-      status: state => state.app.status,
       preloader: state => state.app.preloader,
+      status: state => state.app.status,
     }),
     showStatus: {
       get() {
