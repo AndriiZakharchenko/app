@@ -4,7 +4,7 @@
     <div
       v-if="showPreloader"
       class="icon-load"
-      :class="{'active': preloader}"
+      :class="{'active': removePreloader}"
     >
       <div class="sk-folding-cube">
         <div class="sk-cube1 sk-cube"></div>
@@ -44,11 +44,11 @@ import { mapState } from 'vuex';
 export default {
   components: {
     TheFooter,
-    TheHeader
+    TheHeader,
   },
   mounted() {
     setTimeout(() => {
-      this.$store.commit('app/removePreloader', false);
+      this.$store.commit('app/removePreloader');
     }, 1500);
     setTimeout(() => {
       this.showPreloader = false;
@@ -59,8 +59,8 @@ export default {
   }),
   computed: {
     ...mapState({
-      preloader: state => state.app.preloader,
       status: state => state.app.status,
+      preloader: state => state.app.preloader,
     }),
     showStatus: {
       get() {

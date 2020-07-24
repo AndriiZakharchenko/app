@@ -23,7 +23,7 @@ export default {
       hour12: false,
     };
     const interval = setInterval(() => {
-      this.date = new Intl.DateTimeFormat('en-US', options).format(new Date())
+      this.date = new Intl.DateTimeFormat('en-GB', options).format(new Date());
     }, 1000);
 
     // Memory leak optimization

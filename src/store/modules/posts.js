@@ -22,7 +22,7 @@ export default {
         })
         .finally(() => {
           commit('app/setLoading', false, { root: true });
-        })
+        });
     },
   },
   mutations: {

@@ -12,7 +12,7 @@ export default {
   },
   actions: {
     async registerUser({commit}, {email, password}) {
-      commit('app/setLoading', true, { root: true })
+      commit('app/setLoading', true, { root: true });
       await firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((res) => {
           commit('setUser', res.user.uid);
@@ -21,11 +21,11 @@ export default {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true })
+          commit('app/setLoading', false, { root: true });
         });
     },
     async loginUser({commit}, {email, password}) {
-      commit('app/setLoading', true, { root: true })
+      commit('app/setLoading', true, { root: true });
       await firebase.auth().signInWithEmailAndPassword(email, password)
         .then((res) => {
           commit('setUser', res.user.uid);
@@ -34,7 +34,7 @@ export default {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true })
+          commit('app/setLoading', false, { root: true });
         });
     },
     loggedUser({commit}, payload) {

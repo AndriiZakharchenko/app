@@ -11,7 +11,11 @@
     </md-snackbar>
     <h1>Home</h1>
     <div class="filter-list">
-      <a href="#" ref="defaultFilter" @click="filterFilms('all', $event)">All</a>
+      <a
+href="#"
+ref="defaultFilter"
+@click="filterFilms('all', $event)"
+>All</a>
       <a href="#" @click="filterFilms('completed', $event)">Completed</a>
       <a href="#" @click="filterFilms('active', $event)">Active</a>
     </div>
@@ -65,8 +69,8 @@ export default {
       filterElements.forEach(elem => elem.classList.remove('active'));
       event.target.classList.add('active');
       return this.films = this.$store.getters['films/filterFilms'](val);
-    }
-  }
+    },
+  },
 };
 </script>
 

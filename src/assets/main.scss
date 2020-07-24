@@ -9,31 +9,31 @@
 #nav,
 .nav {
   padding: 30px;
-
   a {
     margin-right: 15px;
     font-weight: bold;
     color: #2c3e50;
-
     &.router-link-exact-active {
       color: #42b983;
     }
   }
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: .2s ease-out;
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
   transform: scale(0.99);
 }
 
-.film, .post {
+.film,
+.post {
   margin: 50px auto;
   max-width: 500px;
-
   &__item {
     border: 1px solid;
     padding: 10px;
@@ -47,7 +47,6 @@
 }
 
 $default: #333;
-
 * {
   box-sizing: border-box;
 }
@@ -85,8 +84,7 @@ input[type="checkbox"] {
   display: inline-block;
   vertical-align: baseline;
   margin-right: 10px;
-
-  & + label {
+  &+label {
     display: inline-block;
     vertical-align: middle;
   }
@@ -124,7 +122,6 @@ fieldset:not(.input-error) .error {
   background-color: #333;
   color: #fff;
   text-align: center;
-
   span {
     width: 100%;
   }
@@ -149,7 +146,6 @@ fieldset:not(.input-error) .error {
   to {
     transform: translate3d(0, 0, 0);
   }
-
   10%,
   30%,
   50%,
@@ -157,7 +153,6 @@ fieldset:not(.input-error) .error {
   90% {
     transform: translate3d(-5px, 0, 0);
   }
-
   20%,
   40%,
   60%,
@@ -170,8 +165,39 @@ fieldset:not(.input-error) .error {
   animation-name: shake;
 }
 
-@keyframes fadeInUp{0%{opacity:0;transform:translate3d(0,20px,0)}to{opacity:1;-webkit-transform:translateZ(0);transform:translateZ(0)}}.fadeInUp{-webkit-animation-name:fadeInUp;animation-name:fadeInUp}
-@keyframes fadeInDown{0%{opacity:1;transform:translate3d(0,-20px,0)}to{opacity:0;-webkit-transform:translateZ(0);transform:translateZ(0)}}.fadeInDown{-webkit-animation-name:fadeInDown;animation-name:fadeInDown}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0)
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0)
+  }
+}
+
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0)
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0)
+  }
+}
+
+.fadeInDown {
+  -webkit-animation-name: fadeInDown;
+  animation-name: fadeInDown
+}
 
 .md-snackbar.md-position-center {
   border-radius: 4px;
@@ -179,9 +205,11 @@ fieldset:not(.input-error) .error {
   bottom: auto;
 }
 
+
 /*================================================================================
 PRELOADER
 ================================================================================*/
+
 .icon-load {
   position: fixed;
   z-index: 9999;
@@ -253,19 +281,16 @@ PRELOADER
 }
 
 @keyframes sk-foldCubeAngle {
-
   0%,
   10% {
     transform: perspective(140px) rotateX(-180deg);
     opacity: 0
   }
-
   25%,
   75% {
     transform: perspective(140px) rotateX(0deg);
     opacity: 1
   }
-
   90%,
   100% {
     transform: perspective(140px) rotateY(180deg);

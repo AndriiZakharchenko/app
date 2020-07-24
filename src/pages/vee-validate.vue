@@ -32,7 +32,11 @@
           class="vee-form__item"
         >
           <label>Email</label>
-          <input :class="classes" v-model="email" type="email"/>
+          <input
+:class="classes"
+v-model="email"
+type="email"
+/>
           <span class="error" v-if="errors[0]">{{ errors[0] }}</span>
         </validation-provider>
         <md-button

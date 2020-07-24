@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Database</h1>
-    <md-dialog :md-active.sync="showDialog">
+    <md-dialog :md-active.sync="showDeleteDialog">
       <md-dialog-title>Post editing</md-dialog-title>
       <form novalidate>
         <fieldset :class="{ 'input-error': $v.titleEdit.$error }">
@@ -11,7 +11,7 @@
             v-model="titleEdit"
             @change="$v.titleEdit.$touch()"
           />
-          <div class="error" v-if="!$v.titleEdit.required">Title is required.</div>
+          <div class="error" v-if="!$v.editForm.titleEdit.required">Title is required.</div>
         </fieldset>
         <fieldset :class="{ 'input-error': $v.descriptionEdit.$error }">
           <label>Post description</label>
@@ -25,7 +25,43 @@
       </form>
       <md-dialog-actions>
         <md-button class="md-primary" @click="showDialog = false">Close</md-button>
-        <md-button class="md-primary" @click.native="onEditPost" type="submit">Save</md-button>
+        <md-button
+class="md-primary"
+@click.native="onEditPost"
+type="submit"
+>Save</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+
+    <md-dialog :md-active.sync="showEditDialog">
+      <md-dialog-title>Post editing</md-dialog-title>
+      <form novalidate>
+        <fieldset :class="{ 'input-error': $v.titleEdit.$error }">
+          <label>Post title</label>
+          <input
+            type="text"
+            v-model="titleEdit"
+            @change="$v.titleEdit.$touch()"
+          />
+          <div class="error" v-if="!$v.editForm.titleEdit.required">Title is required.</div>
+        </fieldset>
+        <fieldset :class="{ 'input-error': $v.descriptionEdit.$error }">
+          <label>Post description</label>
+          <input
+            type="text"
+            v-model="descriptionEdit"
+            @change="$v.descriptionEdit.$touch()"
+          />
+          <div class="error" v-if="!$v.descriptionEdit.required">Description is required.</div>
+        </fieldset>
+      </form>
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="showDialog = false">Close</md-button>
+        <md-button
+class="md-primary"
+@click.native="onEditPost"
+type="submit"
+>Save</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -50,9 +86,13 @@
       </fieldset>
       <md-button type="submit" class="md-raised">Add</md-button>
     </form>
-    <br>
+    <br/>
     <div class="post">
-      <transition-group enter-active-class="animated fadeInUp" leave-active-class="animated fadeInDown" tag="div">
+      <transition-group
+enter-active-class="animated fadeInUp"
+leave-active-class="animated fadeInDown"
+tag="div"
+>
         <div
           class="post__item"
           v-for="post in posts"
@@ -74,30 +114,41 @@ import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'database',
+  async created() {
+    await this.getPosts();
+    this.defaultForm = this.form;
+  },
   data: () => ({
-    title: '',
-    description: '',
-    showDialog: false,
-    id: '',
-    titleEdit: '',
-    descriptionEdit: '',
+    defaultForm: null,
+    form: {
+      title: '',
+      description: '',
+    },
+    editForm: {
+      id: '',
+      titleEdit: '',
+      descriptionEdit: '',
+    },
+    showEditDialog: false,
+    showDeleteDialog: false,
   }),
   validations: {
-    title: {
-      required,
+    form: {
+      title: {
+        required,
+      },
+      description: {
+        required,
+      },
     },
-    description: {
-      required,
+    editForm: {
+      titleEdit: {
+        required,
+      },
+      descriptionEdit: {
+        required,
+      },
     },
-    titleEdit: {
-      required,
-    },
-    descriptionEdit: {
-      required,
-    },
-  },
-  async created() {
-    await this.$store.dispatch('database/getPosts');
   },
   computed: {
     ...mapState({
@@ -120,30 +171,32 @@ export default {
       // this.$v.$touch();
       this.$v.title.$touch();
       this.$v.description.$touch();
-      if (!this.$v.title.$invalid && !this.$v.description.$invalid) {
+      if (!this.$v.form.title.$invalid && !this.$v.form.description.$invalid) {
         const post = {
-          title: this.title,
-          description: this.description,
+          title: this.form.title,
+          description: this.form.description,
         };
         await this.addPost(post)
           .then(() => {
             //Reset fields
-            this.title = this.description = '';
+            // this.title = this.description = '';
+            // Object.assign(this.$data, this.$options.data());
+            this.defaultForm = Object.assign({}, this.form);
             this.$v.$reset();
             this.changeStatus('Added new post');
           })
           .catch((error) => {
             this.changeStatus(error);
-          })
+          });
       }
     },
     showModal(post) {
-      this.showDialog = true;
-      this.titleEdit = post.title;
-      this.descriptionEdit = post.description;
-      this.id = post.id;
+      this.showEditDialog = true;
+      this.form.titleEdit = post.title;
+      this.form.descriptionEdit = post.description;
+      this.form.id = post.id;
     },
-    async onEditPost() {
+    async editPost() {
       this.$v.titleEdit.$touch();
       this.$v.descriptionEdit.$touch();
       if (!this.$v.titleEdit.$invalid && !this.$v.descriptionEdit.$invalid) {
@@ -160,11 +213,11 @@ export default {
             this.changeStatus(error);
           }).
           finally(() => {
-            this.showDialog = false;
+            this.showEditDialog = false;
           });
       }
     },
-    async deleteCurrent(id) {
+    async deletePost(id) {
       await this.deletePost(id)
         .then(() => {
           this.changeStatus('Deleted current post');
@@ -172,7 +225,7 @@ export default {
         .catch((error) => {
           this.changeStatus(error);
         });
-    }
+    },
   },
 };
 </script>

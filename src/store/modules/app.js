@@ -1,16 +1,16 @@
 export default {
   namespaced: true,
   state: {
-    preloader: true,
     status: '',
     showStatus: false,
     isLoading: false,
+    preloader: true,
   },
   getters: {},
   actions: {},
   mutations: {
-    removePreloader(state, payload) {
-      state.preloader = payload;
+    removePreloader(state) {
+      state.preloader = false;
     },
     setLoading(state, payload) {
       state.isLoading = payload;
