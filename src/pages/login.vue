@@ -1,15 +1,5 @@
 <template>
   <div>
-    <md-snackbar
-      class="md-theme-demo-light"
-      md-position="center"
-      :md-duration="4000"
-      :md-active.sync="showStatus"
-      md-persistent
-    >
-      <span>{{ status }}</span>
-    </md-snackbar>
-
     <h1>Login</h1>
     <form @submit.prevent="onSubmit" novalidate>
       <fieldset :class="{ 'input-error': $v.email.$error }">
@@ -66,8 +56,6 @@ export default {
   data: () => ({
     email: '',
     password: '',
-    status: '',
-    showStatus: false,
   }),
   validations: {
     email: {
@@ -103,9 +91,7 @@ export default {
         await this.loginUser(user)
           .then(() => {
             this.changeStatus('Logging');
-            setTimeout(() => {
-              this.$router.push('/');
-            }, 1000);
+            this.$router.push('/');
           })
           .catch((error) => {
             this.changeStatus(error);

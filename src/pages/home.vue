@@ -8,14 +8,23 @@
         class="active"
         @click="filterFilms(FILM_FILTERS.all, $event)"
       >All</a>
-      <a role="button" @click="filterFilms(FILM_FILTERS.completed, $event)">Completed</a>
-      <a role="button" @click="filterFilms(FILM_FILTERS.active, $event)">Active</a>
+      <a
+        role="button"
+        @click="filterFilms(FILM_FILTERS.completed, $event)"
+      >Completed</a>
+      <a
+        role="button"
+        @click="filterFilms(FILM_FILTERS.active, $event)"
+      >Active</a>
     </div>
     <div
       class="film"
       v-if="films.length"
     >
-      <transition-group enter-active-class="animated fadeInUp" leave-active-class="animated fadeInDown">
+      <transition-group
+        enter-active-class="animated fadeInUp"
+        leave-active-class="animated fadeInDown"
+      >
         <div
           class="film__item"
           v-for="(film) in films"

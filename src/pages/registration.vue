@@ -1,14 +1,5 @@
 <template>
   <div>
-    <md-snackbar
-      class="md-theme-demo-light"
-      md-position="center"
-      :md-duration="4000"
-      :md-active.sync="showStatus"
-      md-persistent
->
-      <span>{{ status }}</span>
-    </md-snackbar>
     <h1>Registration</h1>
     <form @submit.prevent="onSubmit">
       <fieldset :class="{ 'input-error': $v.email.$error }">
@@ -59,7 +50,7 @@
             :md-diameter="16"
             :md-stroke="2"
             md-mode="indeterminate"
-/>
+          />
           <span v-else>Registration</span>
         </md-button>
       </div>
@@ -115,9 +106,7 @@ export default {
         await this.$store.dispatch('user/registerUser', user)
           .then(() => {
             this.changeStatus('Registered');
-            setTimeout(() => {
-              this.$router.push('/');
-            }, 1000);
+            this.$router.push('/');
           })
           .catch((error) => {
             this.changeStatus(error);
