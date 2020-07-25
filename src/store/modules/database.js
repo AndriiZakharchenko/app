@@ -38,7 +38,7 @@ export default {
           commit('app/setLoading', false, { root: true });
         });
     },
-    async deletePostWithId({commit, dispatch, rootState}, id) {
+    async deletePost({commit, dispatch, rootState}, id) {
       commit('app/setLoading', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref('users/' + user + '/posts').child(id).remove()

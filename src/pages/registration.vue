@@ -43,6 +43,7 @@
         <md-button
           class="md-raised"
           type="submit"
+          :disabled="$v.$invalid || isLoading"
         >
           <span v-if="isLoading">Register...</span>
           <md-progress-spinner
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import { email, sameAs, minLength, required } from 'vuelidate/lib/validators';
 
 export default {
@@ -91,6 +92,9 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      registerUser: 'user/registerUser',
+    }),
     ...mapMutations({
       changeStatus: 'app/changeStatus',
     }),
@@ -103,7 +107,7 @@ export default {
           email: this.email,
           password: this.password,
         };
-        await this.$store.dispatch('user/registerUser', user)
+        await this.registerUser(user)
           .then(() => {
             this.changeStatus('Registered');
             this.$router.push('/');

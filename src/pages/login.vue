@@ -32,6 +32,7 @@
         <md-button
           class="md-raised"
           type="submit"
+          :disabled="$v.$invalid || isLoading"
         >
           <md-progress-spinner
             v-if="isLoading"
@@ -94,7 +95,7 @@ export default {
             this.$router.push('/');
           })
           .catch((error) => {
-            this.changeStatus(error);
+            this.changeStatus(error.message);
           });
       }
     },

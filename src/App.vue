@@ -19,7 +19,7 @@
       class="md-theme-demo-light"
       md-position="center"
       md-persistent
-      :md-duration="4000"
+      :md-duration="statusDuration"
       :md-active.sync="showStatus"
     >
       <span>{{ status }}</span>
@@ -46,15 +46,18 @@ export default {
     TheHeader,
   },
   mounted() {
-    setTimeout(() => {
-      this.$store.commit('app/removePreloader');
-    }, 1500);
-    setTimeout(() => {
-      this.showPreloader = false;
-    }, 2000);
+    if (this.preloader) {
+      setTimeout(() => {
+        this.$store.commit('app/removePreloader');
+      }, 1500);
+      setTimeout(() => {
+        this.showPreloader = false;
+      }, 2000);
+    }
   },
   data: () => ({
     showPreloader: true,
+    statusDuration: 4000,
   }),
   computed: {
     ...mapState({
@@ -66,7 +69,9 @@ export default {
         return this.$store.state.app.showStatus;
       },
       set(val) {
-        this.$store.commit('app/clearStatus', val);
+        setTimeout(() => {
+          this.$store.commit('app/clearStatus', val);
+        }, this.statusDuration);
       },
     },
   },

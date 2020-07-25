@@ -20,7 +20,11 @@
         />
         <div class="error" v-if="!$v.description.required">Description is required.</div>
       </fieldset>
-      <md-button type="submit" class="md-raised">Add</md-button>
+      <md-button
+        type="submit"
+        class="md-raised"
+        :disabled="$v.$invalid"
+      >Add</md-button>
     </form>
   </div>
 </template>

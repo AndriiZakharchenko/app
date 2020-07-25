@@ -1,40 +1,20 @@
 <template>
   <div>
     <h1>Database</h1>
-<!--    <md-dialog :md-active.sync="showDeleteDialog">-->
-<!--      <md-dialog-title>Post editing</md-dialog-title>-->
-<!--      <form novalidate>-->
-<!--        <fieldset :class="{ 'input-error': $v.formEdit.titleEdit.$error }">-->
-<!--          <label>Post title</label>-->
-<!--          <input-->
-<!--            type="text"-->
-<!--            v-model="formEdit.titleEdit"-->
-<!--            @change="$v.formEdit.titleEdit.$touch()"-->
-<!--          />-->
-<!--          <div class="error" v-if="!$v.formEdit.titleEdit.required">Title is required.</div>-->
-<!--        </fieldset>-->
-<!--        <fieldset :class="{ 'input-error': $v.formEdit.descriptionEdit.$error }">-->
-<!--          <label>Post description</label>-->
-<!--          <input-->
-<!--            type="text"-->
-<!--            v-model="formEdit.descriptionEdit"-->
-<!--            @change="$v.formEdit.descriptionEdit.$touch()"-->
-<!--          />-->
-<!--          <div class="error" v-if="!$v.formEdit.descriptionEdit.required">Description is required.</div>-->
-<!--        </fieldset>-->
-<!--      </form>-->
-<!--      <md-dialog-actions>-->
-<!--        <md-button-->
-<!--          class="md-primary"-->
-<!--          @click="showDialog = false"-->
-<!--        >Close</md-button>-->
-<!--        <md-button-->
-<!--          class="md-primary"-->
-<!--          @click.native="onEditPost"-->
-<!--          type="submit"-->
-<!--        >Save</md-button>-->
-<!--      </md-dialog-actions>-->
-<!--    </md-dialog>-->
+    <md-dialog :md-active.sync="showDeleteDialog">
+      <md-dialog-title>Are you sure?</md-dialog-title>
+      <md-dialog-actions>
+        <md-button
+          class="md-primary"
+          @click="showDeleteDialog = false"
+        >Close</md-button>
+        <md-button
+          class="md-primary"
+          type="submit"
+          @click.native="onDeletePost"
+        >Delete</md-button>
+      </md-dialog-actions>
+    </md-dialog>
 
     <md-dialog :md-active.sync="showEditDialog">
       <md-dialog-title>Post editing</md-dialog-title>
@@ -62,7 +42,7 @@
         <md-button class="md-primary" @click="showDialog = false">Close</md-button>
         <md-button
           class="md-primary"
-          @click.native="editPost"
+          @click.native="onEditPost"
           type="submit"
         >Save</md-button>
       </md-dialog-actions>
@@ -87,7 +67,11 @@
         />
         <div class="error" v-if="!$v.form.description.required">Description is required.</div>
       </fieldset>
-      <md-button type="submit" class="md-raised">Add</md-button>
+      <md-button
+        type="submit"
+        :disabled="$v.$invalid"
+        class="md-raised"
+      >Add</md-button>
     </form>
     <br/>
     <div class="post">
@@ -103,8 +87,8 @@
         >
           <h3>{{ post.title }}</h3>
           <p>{{ post.description }}</p>
-          <md-button class="md-raised" @click="showModal(post)">Change post</md-button>
-          <md-button class="md-raised" @click="deletePost(post.id)">Delete post</md-button>
+          <md-button class="md-raised" @click="showEditModal(post)">Change post</md-button>
+          <md-button class="md-raised" @click="showDeleteModal(post.id)">Delete post</md-button>
         </div>
       </transition-group>
     </div>
@@ -118,8 +102,12 @@ import { mapState, mapActions, mapMutations } from 'vuex';
 export default {
   name: 'database',
   async created() {
-    await this.getPosts();
-    // this.defaultForm = this.form;
+    await this.getPosts()
+      .then(() => {})
+      .catch((error) => {
+        this.changeStatus(error);
+      });
+    this.defaultForm = this.form;
   },
   data: () => ({
     defaultForm: null,
@@ -132,6 +120,7 @@ export default {
       titleEdit: '',
       descriptionEdit: '',
     },
+    id: null,
     showEditDialog: false,
     showDeleteDialog: false,
   }),
@@ -144,7 +133,7 @@ export default {
         required,
       },
     },
-    editForm: {
+    formEdit: {
       titleEdit: {
         required,
       },
@@ -165,7 +154,7 @@ export default {
       getPosts: 'database/getPosts',
       addPost: 'database/addPost',
       editPost: 'database/editPost',
-      deletePostWithId: 'database/deletePostWithId',
+      deletePost: 'database/deletePost',
     }),
     ...mapMutations({
       changeStatus: 'app/changeStatus',
@@ -182,10 +171,8 @@ export default {
         await this.addPost(post)
           .then(() => {
             //Reset fields
-            this.title = this.description = '';
-            // Object.assign(this.$data, this.$options.data());
-            // this.defaultForm = Object.assign({}, this.form);
             this.$v.$reset();
+            this.form.title = this.form.description = '';
             this.changeStatus('Added new post');
           })
           .catch((error) => {
@@ -193,13 +180,13 @@ export default {
           });
       }
     },
-    showModal(post) {
+    showEditModal(post) {
       this.showEditDialog = true;
       this.formEdit.titleEdit = post.title;
       this.formEdit.descriptionEdit = post.description;
       this.formEdit.id = post.id;
     },
-    async editPost() {
+    async onEditPost() {
       this.$v.formEdit.titleEdit.$touch();
       this.$v.formEdit.descriptionEdit.$touch();
       if (!this.$v.formEdit.titleEdit.$invalid && !this.$v.formEdit.descriptionEdit.$invalid) {
@@ -214,19 +201,26 @@ export default {
           })
           .catch((error) => {
             this.changeStatus(error);
-          }).
-          finally(() => {
+          })
+          .finally(() => {
             this.showEditDialog = false;
           });
       }
     },
-    async deletePost(id) {
-      await this.deletePostWithId(id)
+    showDeleteModal(id) {
+      this.showDeleteDialog = true;
+      this.id = id;
+    },
+    async onDeletePost() {
+      await this.deletePost(this.id)
         .then(() => {
           this.changeStatus('Deleted current post');
         })
         .catch((error) => {
           this.changeStatus(error);
+        })
+        .finally(() => {
+          this.showDeleteDialog = false;
         });
     },
   },

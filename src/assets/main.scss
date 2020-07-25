@@ -205,6 +205,9 @@ fieldset:not(.input-error) .error {
   bottom: auto;
 }
 
+.md-dialog .md-button {
+  z-index: 100;
+}
 
 /*================================================================================
 PRELOADER
