@@ -19,31 +19,32 @@
     <md-dialog :md-active.sync="showEditDialog">
       <md-dialog-title>Post editing</md-dialog-title>
       <form novalidate>
-        <fieldset :class="{ 'input-error': $v.formEdit.titleEdit.$error }">
+        <fieldset :class="{ 'input-error': $v.formEdit.title.$error }">
           <label>Post title</label>
           <input
             type="text"
-            v-model="formEdit.titleEdit"
-            @change="$v.formEdit.titleEdit.$touch()"
+            v-model="formEdit.title"
+            @change="$v.formEdit.title.$touch()"
           />
-          <div class="error" v-if="!$v.formEdit.titleEdit.required">Title is required.</div>
+          <div class="error" v-if="!$v.formEdit.title.required">Title is required.</div>
         </fieldset>
-        <fieldset :class="{ 'input-error': $v.formEdit.descriptionEdit.$error }">
+        <fieldset :class="{ 'input-error': $v.formEdit.description.$error }">
           <label>Post description</label>
           <input
             type="text"
-            v-model="formEdit.descriptionEdit"
-            @change="$v.formEdit.descriptionEdit.$touch()"
+            v-model="formEdit.description"
+            @change="$v.formEdit.description.$touch()"
           />
-          <div class="error" v-if="!$v.formEdit.descriptionEdit.required">Description is required.</div>
+          <div class="error" v-if="!$v.formEdit.description.required">Description is required.</div>
         </fieldset>
       </form>
       <md-dialog-actions>
         <md-button class="md-primary" @click="showDialog = false">Close</md-button>
         <md-button
           class="md-primary"
-          @click.native="onEditPost"
           type="submit"
+          :disabled="$v.formEdit.$invalid"
+          @click.native="onEditPost"
         >Save</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -69,7 +70,7 @@
       </fieldset>
       <md-button
         type="submit"
-        :disabled="$v.$invalid"
+        :disabled="$v.form.$invalid"
         class="md-raised"
       >Add</md-button>
     </form>
@@ -116,9 +117,9 @@ export default {
       description: '',
     },
     formEdit: {
+      title: '',
+      description: '',
       id: '',
-      titleEdit: '',
-      descriptionEdit: '',
     },
     id: null,
     showEditDialog: false,
@@ -134,10 +135,10 @@ export default {
       },
     },
     formEdit: {
-      titleEdit: {
+      title: {
         required,
       },
-      descriptionEdit: {
+      description: {
         required,
       },
     },
@@ -160,10 +161,8 @@ export default {
       changeStatus: 'app/changeStatus',
     }),
     async onSubmit() {
-      // this.$v.$touch();
-      this.$v.form.title.$touch();
-      this.$v.form.description.$touch();
-      if (!this.$v.form.title.$invalid && !this.$v.form.description.$invalid) {
+      this.$v.form.$touch();
+      if (!this.$v.form.$invalid) {
         const post = {
           title: this.form.title,
           description: this.form.description,
@@ -172,7 +171,9 @@ export default {
           .then(() => {
             //Reset fields
             this.$v.$reset();
-            this.form.title = this.form.description = '';
+            Object.keys(this.form).forEach((key) => {
+              this.form[key] = '';
+            });
             this.changeStatus('Added new post');
           })
           .catch((error) => {
@@ -182,20 +183,12 @@ export default {
     },
     showEditModal(post) {
       this.showEditDialog = true;
-      this.formEdit.titleEdit = post.title;
-      this.formEdit.descriptionEdit = post.description;
-      this.formEdit.id = post.id;
+      Object.assign(this.formEdit, post);
     },
     async onEditPost() {
-      this.$v.formEdit.titleEdit.$touch();
-      this.$v.formEdit.descriptionEdit.$touch();
-      if (!this.$v.formEdit.titleEdit.$invalid && !this.$v.formEdit.descriptionEdit.$invalid) {
-        const post = {
-          title: this.formEdit.titleEdit,
-          description: this.formEdit.descriptionEdit,
-          id: this.formEdit.id,
-        };
-        await this.editPost(post)
+      this.$v.formEdit.$touch();
+      if (!this.$v.formEdit.$invalid) {
+        await this.editPost(this.formEdit)
           .then(() => {
             this.changeStatus('Changed current post');
           })

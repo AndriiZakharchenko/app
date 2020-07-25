@@ -49,10 +49,10 @@ export default {
     if (this.preloader) {
       setTimeout(() => {
         this.$store.commit('app/removePreloader');
-      }, 1500);
+      }, 1000);
       setTimeout(() => {
         this.showPreloader = false;
-      }, 2000);
+      }, 1500);
     }
   },
   data: () => ({

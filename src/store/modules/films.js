@@ -20,7 +20,6 @@ export default {
         isCompleted: false,
       },
     ],
-    activeFilter: FILM_FILTERS.all,
   },
   getters: {
     filterFilms(state) {
@@ -42,9 +41,6 @@ export default {
   mutations: {
     addFilm(state, payload) {
       state.films.push(payload);
-    },
-    changeFilter(state, payload) {
-      state.activeFilter = payload;
     },
   },
 };

@@ -24,7 +24,7 @@
       <transition-group
         enter-active-class="animated fadeInUp"
         leave-active-class="animated fadeInDown"
-      >
+>
         <div
           class="film__item"
           v-for="(film) in films"
@@ -59,7 +59,7 @@ export default {
     }
 
     //Default film list
-    this.films = this.$store.state.films.films;
+    this.$refs.defaultFilter.click();
   },
   data: () => ({
     films: [],
