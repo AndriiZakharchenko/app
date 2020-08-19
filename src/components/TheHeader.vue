@@ -52,6 +52,10 @@ export default {
             name: 'vuex',
             label: 'Vuex & Axios',
           },
+          {
+            name: 'table',
+            label: 'Table',
+          },
         ];
       } else {
         return [

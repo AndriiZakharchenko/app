@@ -3,16 +3,16 @@ import firebase from 'firebase/app';
 export default {
   namespaced: true,
   state: {
-    posts: [],
+    table: [],
   },
   getters: {},
   actions: {
-    async addPost({commit, dispatch, rootState}, payload) {
+    async addData({commit, dispatch, rootState}, payload) {
       commit('app/setLoading', true, { root: true });
       const user = rootState.user.user;
-      await firebase.database().ref(`users/${user}/posts`).push(payload)
+      await firebase.database().ref(`users/${user}/table`).push(payload)
         .then(() => {
-          dispatch('getPosts');
+          dispatch('getData');
         })
         .catch((error) => {
           throw error;
@@ -21,15 +21,16 @@ export default {
           commit('app/setLoading', false, { root: true });
         });
     },
-    async editPost({commit, dispatch, rootState}, {title, description, id}) {
+    async editData({commit, dispatch, rootState}, {name, email, description, id}) {
       commit('app/setLoading', true, { root: true });
       const user = rootState.user.user;
-      await firebase.database().ref(`users/${user}/posts`).child(id).update({
-        title,
+      await firebase.database().ref(`users/${user}/table`).child(id).update({
+        name,
+        email,
         description,
       })
         .then(() => {
-          dispatch('getPosts');
+          dispatch('getData');
         })
         .catch((error) => {
           throw error;
@@ -38,12 +39,12 @@ export default {
           commit('app/setLoading', false, { root: true });
         });
     },
-    async deletePost({commit, dispatch, rootState}, id) {
+    async deleteData({commit, dispatch, rootState}, id) {
       commit('app/setLoading', true, { root: true });
       const user = rootState.user.user;
-      await firebase.database().ref(`users/${user}/posts`).child(id).remove()
+      await firebase.database().ref(`users/${user}/table`).child(id).remove()
         .then(() => {
-          dispatch('getPosts');
+          dispatch('getData');
         })
         .catch((error) => {
           throw error;
@@ -52,24 +53,12 @@ export default {
           commit('app/setLoading', false, { root: true });
         });
     },
-    async getPosts({commit, rootState}) {
+    async getData({commit, rootState}) {
       commit('app/setLoading', true, { root: true });
       const user = rootState.user.user;
-      await firebase.database().ref(`users/${user}/posts`).once('value')
+      await firebase.database().ref(`users/${user}/table`).once('value')
         .then((response) => {
-          const tasksArray = [];
-          const tasks = response.val();
-          if (tasks) {
-            // the firebase send the object with unique id for each posts
-            // we create new array and add the unique id to the each post
-            Object.keys(tasks).forEach(key => {
-              tasksArray.push({
-                ...tasks[key],
-                id: key,
-              });
-            });
-          }
-          commit('fetchPosts', tasksArray);
+          commit('fetchData', response.val());
         })
         .catch((error) => {
           throw error;
@@ -80,8 +69,8 @@ export default {
     },
   },
   mutations: {
-    fetchPosts(state, payload) {
-      state.posts = payload;
+    fetchData(state, payload) {
+      state.table = payload;
     },
   },
 };

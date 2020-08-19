@@ -4,7 +4,6 @@
     <div class="filter-list">
       <a
         role="button"
-        ref="defaultFilter"
         class="active"
         @click="filterFilms(FILM_FILTERS.all, $event)"
       >All</a>
@@ -57,12 +56,10 @@ export default {
     if (messageBool) {
       this.changeStatus(message);
     }
-
-    //Default film list
-    this.$refs.defaultFilter.click();
   },
   data: () => ({
     films: [],
+    currentFilter: FILM_FILTERS.all,
     FILM_FILTERS,
   }),
   methods: {
@@ -71,8 +68,11 @@ export default {
     }),
     filterFilms(val, event) {
       const filterElements = document.querySelectorAll('.filter-list a');
-      filterElements.forEach(elem => elem.classList.remove('active'));
+      filterElements.forEach(elem => {
+        elem.classList.remove('active');
+      });
       event.target.classList.add('active');
+
       return this.films = this.$store.getters['films/filterFilms'](val);
     },
   },

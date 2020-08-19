@@ -34,6 +34,7 @@ import { required } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
 
 export default {
+  name: 'create-task',
   data: () => ({
     title: '',
     description: '',

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from '../store';
+import store from '@/store';
 
 import Home from '@/pages/home.vue';
 
@@ -51,6 +51,11 @@ const routes = [
         component: UserPosts,
       },
     ],
+  },
+  {
+    path: '/table',
+    name: 'table',
+    component: () => import('@/pages/table.vue'),
   },
   {
     path: '/login',

@@ -39,7 +39,7 @@
         </fieldset>
       </form>
       <md-dialog-actions>
-        <md-button class="md-primary" @click="showDialog = false">Close</md-button>
+        <md-button class="md-primary" @click="showEditDialog = false">Close</md-button>
         <md-button
           class="md-primary"
           type="submit"
@@ -108,10 +108,8 @@ export default {
       .catch((error) => {
         this.changeStatus(error);
       });
-    this.defaultForm = this.form;
   },
   data: () => ({
-    defaultForm: null,
     form: {
       title: '',
       description: '',
@@ -222,8 +220,6 @@ export default {
 
 <style lang="scss" scoped>
   .md-dialog {
-    background-color: #fff;
-
     form {
       margin: 0;
       padding: 0;

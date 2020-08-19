@@ -8,6 +8,7 @@ import database from './modules/database';
 import films from './modules/films';
 import posts from './modules/posts';
 import user from './modules/user';
+import table from './modules/table';
 
 export default new Vuex.Store({
   modules: {
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     database,
     films,
     posts,
+    table,
     user,
   },
   strict: process.env.NODE_ENV !== 'production',

@@ -3,6 +3,7 @@
     <h1>Vee validate</h1>
     <validation-observer
       v-slot="{ handleSubmit }"
+      tag="div"
     >
       <form
         class="vee-form"
@@ -16,13 +17,15 @@
           tag="div"
           class="vee-form__item"
         >
-          <label>Name</label>
-          <input
-            :class="classes"
-            v-model="name"
-            type="text"
-          />
-          <span class="error" v-if="errors[0]">{{ errors[0] }}</span>
+          <fieldset :class="{ 'input-error': errors[0] }">
+            <label>Name</label>
+            <input
+              :class="classes"
+              v-model="name"
+              type="text"
+            />
+            <span class="error" v-if="errors[0]">{{ errors[0] }}</span>
+          </fieldset>
         </validation-provider>
         <validation-provider
           name="email"
@@ -31,13 +34,15 @@
           tag="div"
           class="vee-form__item"
         >
-          <label>Email</label>
-          <input
-            :class="classes"
-            v-model="email"
-            type="email"
-          />
-          <span class="error" v-if="errors[0]">{{ errors[0] }}</span>
+          <fieldset :class="{ 'input-error': errors[0] }">
+            <label>Email</label>
+            <input
+              :class="classes"
+              v-model="email"
+              type="email"
+            />
+            <span class="error" v-if="errors[0]">{{ errors[0] }}</span>
+          </fieldset>
         </validation-provider>
         <md-button
           type="submit"
