@@ -15,7 +15,7 @@
       </md-dialog-actions>
     </md-dialog>
 
-    <h1>Table</h1>
+    <h1>Table-info</h1>
     <form @submit.prevent="onSubmit" novalidate>
       <fieldset :class="{ 'input-error': $v.form.name.$error }">
         <label>Name</label>
@@ -51,38 +51,45 @@
         class="md-raised"
       >Add</md-button>
     </form>
-    <md-table>
-      <md-table-row>
-        <md-table-head md-numeric>Id</md-table-head>
-        <md-table-head>Name</md-table-head>
-        <md-table-head>Email</md-table-head>
-        <md-table-head>Description</md-table-head>
-        <md-table-head>Actions</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(item, i, index) in table" :key="i">
-        <md-table-cell md-numeric >{{ index + 1 }}</md-table-cell>
-        <md-table-cell>
+
+    <md-table
+      v-model="table"
+      md-card
+      md-fixed-header
+    >
+      <md-table-toolbar>
+        <h1 class="md-title">Table</h1>
+      </md-table-toolbar>
+
+      <md-table-row
+        slot-scope="{ item, index }"
+        slot="md-table-row"
+        :class="getClass(index)"
+        md-selectable="single"
+      >
+        <md-table-cell md-label="ID" md-numeric >{{ index + 1 }}</md-table-cell>
+        <md-table-cell md-label="Name">
           <input
             type="text"
             :value="item.name"
             :disabled="!editable"
           />
         </md-table-cell>
-        <md-table-cell>
+        <md-table-cell md-label="Email">
           <input
-            type="text"
+            type="email"
             :value="item.email"
             :disabled="!editable"
           />
         </md-table-cell>
-        <md-table-cell>
+        <md-table-cell md-label="Description">
           <input
             type="text"
             :value="item.description"
             :disabled="!editable"
           />
         </md-table-cell>
-        <md-table-cell class="table-actions">
+        <md-table-cell class="table-actions" md-label="Actions">
           <md-button
             class="md-fab md-mini md-primary"
             v-show="editable"
@@ -94,10 +101,15 @@
             class="md-fab md-mini md-primary"
             v-show="!editable"
             @click="onEditData"
+            title="Edit"
           >
             <md-icon>edit</md-icon>
           </md-button>
-          <md-button class="md-fab md-mini md-accent" @click="showDeleteModal(i)">
+          <md-button
+            class="md-fab md-mini md-accent"
+            @click="showDeleteModal(item.id)"
+            title="Delete"
+          >
             <md-icon>delete</md-icon>
           </md-button>
         </md-table-cell>
@@ -113,7 +125,7 @@ import { required, email } from 'vuelidate/lib/validators';
 import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
-  name: 'table',
+  name: 'table-info',
   async created() {
     await this.getData()
       .then(() => {})
@@ -186,18 +198,18 @@ export default {
       this.editable = true;
 
     },
-    async onSaveData() {
+    onSaveData() {
       this.editable = false;
-      await this.editData()
-        .then(() => {
-          this.changeStatus('Changed current post');
-        })
-        .catch((error) => {
-          this.changeStatus(error);
-        })
-        .finally(() => {
-          this.showEditDialog = false;
-        });
+      // await this.editData()
+      //   .then(() => {
+      //     this.changeStatus('Changed current post');
+      //   })
+      //   .catch((error) => {
+      //     this.changeStatus(error);
+      //   })
+      //   .finally(() => {
+      //     this.showEditDialog = false;
+      //   });
     },
     showDeleteModal(id) {
       this.showDeleteDialog = true;
@@ -215,14 +227,15 @@ export default {
           this.showDeleteDialog = false;
         });
     },
+    getClass(id) {
+      return id === 0 ? 'md-primary': '';
+    },
   },
 };
 </script>
 
 <style scoped>
-  >>> .md-table table {
-    margin: 0 auto;
-    max-width: 1050px;
+  >>> .md-table {
     text-align: left;
   }
 

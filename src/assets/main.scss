@@ -9,12 +9,14 @@
 #nav,
 .nav {
   padding: 30px;
+
   a {
     margin-right: 15px;
     font-weight: bold;
-    color: #2c3e50;
+    color: #2c3e50 !important;
+
     &.router-link-exact-active {
-      color: #42b983;
+      color: #42b983 !important;
     }
   }
 }
@@ -209,9 +211,6 @@ fieldset:not(.input-error) .error {
   z-index: 100;
 }
 
-.md-dialog {
-  background-color: #fff;
-}
 
 /*================================================================================
 PRELOADER

@@ -53,9 +53,9 @@ const routes = [
     ],
   },
   {
-    path: '/table',
-    name: 'table',
-    component: () => import('@/pages/table.vue'),
+    path: '/table-info',
+    name: 'table-info',
+    component: () => import('@/pages/table-info.vue'),
   },
   {
     path: '/login',

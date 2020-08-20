@@ -58,7 +58,17 @@ export default {
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/table`).once('value')
         .then((response) => {
-          commit('fetchData', response.val());
+          const dataArray = [];
+          const data = response.val();
+          if (data) {
+            Object.keys(data).forEach(key => {
+              dataArray.push({
+                ...data[key],
+                id: key,
+              });
+            });
+          }
+          commit('fetchData', dataArray);
         })
         .catch((error) => {
           throw error;

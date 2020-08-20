@@ -53,8 +53,8 @@ export default {
             label: 'Vuex & Axios',
           },
           {
-            name: 'table',
-            label: 'Table',
+            name: 'table-info',
+            label: 'Table-info',
           },
         ];
       } else {

@@ -86,7 +86,7 @@ export default {
 
     main {
       flex: 1;
-      padding: 40px 0;
+      padding: 40px 100px;
     }
   }
 </style>

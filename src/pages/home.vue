@@ -56,6 +56,8 @@ export default {
     if (messageBool) {
       this.changeStatus(message);
     }
+
+    this.films = this.$store.getters['films/filterFilms'](FILM_FILTERS.all);
   },
   data: () => ({
     films: [],
