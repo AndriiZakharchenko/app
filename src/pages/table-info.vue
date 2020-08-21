@@ -51,7 +51,6 @@
         class="md-raised"
       >Add</md-button>
     </form>
-
     <md-table
       v-model="table"
       md-card
@@ -71,6 +70,7 @@
             type="text"
             :value="item.name"
             :disabled="!item.isEditable"
+            @input="getInputVal($event.target.value, 'name')"
           />
         </md-table-cell>
         <md-table-cell md-label="Email">
@@ -78,6 +78,7 @@
             type="email"
             :value="item.email"
             :disabled="!item.isEditable"
+            @input="getInputVal($event.target.value, 'email')"
           />
         </md-table-cell>
         <md-table-cell md-label="Description">
@@ -85,6 +86,7 @@
             type="text"
             :value="item.description"
             :disabled="!item.isEditable"
+            @input="getInputVal($event.target.value, 'description')"
           />
         </md-table-cell>
         <md-table-cell class="table-actions" md-label="Actions">
@@ -145,6 +147,11 @@ export default {
       email: '',
       description: '',
     },
+    editableRow: {
+      name: '',
+      email: '',
+      description: '',
+    },
   }),
   validations: {
     form: {
@@ -198,24 +205,23 @@ export default {
         index,
         isEditable: true,
       });
+      this.editableRow = Object.assign(this.table[index]);
     },
     async onSaveData(index) {
       this.changeRow({
         index,
         isEditable: false,
       });
-      // const rowData = {
-      //   name: this.table[index].name,
-      //   email: this.table[index].email,
-      //   description: this.table[index].description,
-      // };
-      // await this.editData(rowData)
-      //   .then(() => {
-      //     this.changeStatus('Changed current row');
-      //   })
-      //   .catch((error) => {
-      //     this.changeStatus(error);
-      //   });
+      await this.editData(this.editableRow)
+        .then(() => {
+          this.changeStatus('Changed current row');
+        })
+        .catch((error) => {
+          this.changeStatus(error);
+        });
+    },
+    getInputVal(value, type) {
+      this.editableRow[type] = value;
     },
     showDeleteModal(id) {
       this.showDeleteDialog = true;
