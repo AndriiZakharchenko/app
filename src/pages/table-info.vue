@@ -95,6 +95,7 @@
             v-show="item.isEditable"
             @click="onSaveData(index)"
             title="Save"
+            :disabled="saveDisabled"
           >
             <md-icon>save</md-icon>
           </md-button>
@@ -142,6 +143,7 @@ export default {
   data: () => ({
     id: null,
     showDeleteDialog: false,
+    saveDisabled: false,
     form: {
       name: '',
       email: '',
@@ -222,6 +224,11 @@ export default {
     },
     getInputVal(value, type) {
       this.editableRow[type] = value;
+      this.saveDisabled = false;
+      if (!value) {
+        this.changeStatus(`Input ${type} shouldn't be empty`);
+        this.saveDisabled = true;
+      }
     },
     showDeleteModal(id) {
       this.showDeleteDialog = true;
