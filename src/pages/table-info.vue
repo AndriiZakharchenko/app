@@ -64,43 +64,42 @@
       <md-table-row
         slot-scope="{ item, index }"
         slot="md-table-row"
-        :class="getClass(index)"
-        md-selectable="single"
       >
         <md-table-cell md-label="ID" md-numeric >{{ index + 1 }}</md-table-cell>
         <md-table-cell md-label="Name">
           <input
             type="text"
             :value="item.name"
-            :disabled="!editable"
+            :disabled="!item.isEditable"
           />
         </md-table-cell>
         <md-table-cell md-label="Email">
           <input
             type="email"
             :value="item.email"
-            :disabled="!editable"
+            :disabled="!item.isEditable"
           />
         </md-table-cell>
         <md-table-cell md-label="Description">
           <input
             type="text"
             :value="item.description"
-            :disabled="!editable"
+            :disabled="!item.isEditable"
           />
         </md-table-cell>
         <md-table-cell class="table-actions" md-label="Actions">
           <md-button
             class="md-fab md-mini md-primary"
-            v-show="editable"
-            @click="onSaveData"
+            v-show="item.isEditable"
+            @click="onSaveData(index)"
+            title="Save"
           >
             <md-icon>save</md-icon>
           </md-button>
           <md-button
             class="md-fab md-mini md-primary"
-            v-show="!editable"
-            @click="onEditData"
+            v-show="!item.isEditable"
+            @click="onEditData(index)"
             title="Edit"
           >
             <md-icon>edit</md-icon>
@@ -141,7 +140,6 @@ export default {
   data: () => ({
     id: null,
     showDeleteDialog: false,
-    editable: false,
     form: {
       name: '',
       email: '',
@@ -171,6 +169,7 @@ export default {
     }),
     ...mapMutations({
       changeStatus: 'app/changeStatus',
+      changeRow: 'table/changeRow',
     }),
     async onSubmit() {
       this.$v.form.$touch();
@@ -194,21 +193,28 @@ export default {
           });
       }
     },
-    onEditData() {
-      this.editable = true;
-
+    onEditData(index) {
+      this.changeRow({
+        index,
+        isEditable: true,
+      });
     },
-    onSaveData() {
-      this.editable = false;
-      // await this.editData()
+    async onSaveData(index) {
+      this.changeRow({
+        index,
+        isEditable: false,
+      });
+      // const rowData = {
+      //   name: this.table[index].name,
+      //   email: this.table[index].email,
+      //   description: this.table[index].description,
+      // };
+      // await this.editData(rowData)
       //   .then(() => {
-      //     this.changeStatus('Changed current post');
+      //     this.changeStatus('Changed current row');
       //   })
       //   .catch((error) => {
       //     this.changeStatus(error);
-      //   })
-      //   .finally(() => {
-      //     this.showEditDialog = false;
       //   });
     },
     showDeleteModal(id) {
@@ -227,9 +233,6 @@ export default {
           this.showDeleteDialog = false;
         });
     },
-    getClass(id) {
-      return id === 0 ? 'md-primary': '';
-    },
   },
 };
 </script>
@@ -242,5 +245,6 @@ export default {
   >>> .table-actions .md-table-cell-container {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
   }
 </style>

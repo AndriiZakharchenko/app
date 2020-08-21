@@ -65,6 +65,7 @@ export default {
               dataArray.push({
                 ...data[key],
                 id: key,
+                isEditable: false,
               });
             });
           }
@@ -81,6 +82,9 @@ export default {
   mutations: {
     fetchData(state, payload) {
       state.table = payload;
+    },
+    changeRow(state, payload) {
+      state.table[payload.index].isEditable = payload.isEditable;
     },
   },
 };
