@@ -34,7 +34,7 @@
           @change="$v.form.email.$touch()"
         />
         <div class="error" v-if="!$v.form.email.required">Email is required.</div>
-        <div class="error" v-if="!$v.form.email.email">Email must be correct.</div>
+        <div class="error" v-if="!$v.form.email.email">Email should be correct.</div>
       </fieldset>
       <fieldset :class="{ 'input-error': $v.form.description.$error }">
         <label>Description</label>
@@ -71,35 +71,35 @@
       >
         <md-table-cell md-label="ID" md-numeric >{{ index + 1 }}</md-table-cell>
         <md-table-cell md-label="Name">
-          <fieldset :class="{ 'input-error': $v.editableRow.name.$error }">
+          <fieldset :class="{ 'input-error': $v.editableRow.name.$invalid && table[index].isEditable }">
             <input
               type="text"
               v-model.trim="item.name"
               :disabled="!item.isEditable"
-              @input="changeName($event.target.value)"
+              @change="onChangeData(index)"
             />
             <div class="error" v-if="!$v.editableRow.name.required">Name is required.</div>
           </fieldset>
         </md-table-cell>
         <md-table-cell md-label="Email">
-          <fieldset :class="{ 'input-error': $v.editableRow.email.$error }">
+          <fieldset :class="{ 'input-error': $v.editableRow.email.$invalid && table[index].isEditable }">
             <input
               type="email"
               v-model.trim="item.email"
               :disabled="!item.isEditable"
-              @input="changeEmail($event.target.value)"
+              @change="onChangeData(index)"
             />
             <div class="error" v-if="!$v.editableRow.email.required">Email is required.</div>
             <div class="error" v-if="!$v.editableRow.email.email">Email should be correct.</div>
           </fieldset>
         </md-table-cell>
         <md-table-cell md-label="Description">
-          <fieldset :class="{ 'input-error': $v.editableRow.description.$error }">
+          <fieldset :class="{ 'input-error': $v.editableRow.description.$invalid && table[index].isEditable }">
             <input
               type="text"
               v-model.trim="item.description"
               :disabled="!item.isEditable"
-              @input="changeDescription($event.target.value)"
+              @change="onChangeData(index)"
             />
             <div class="error" v-if="!$v.editableRow.description.required">Description is required.</div>
           </fieldset>
@@ -133,7 +133,6 @@
       </md-table-row>
     </md-table>
     <br/><br/>
-    {{$v.editableRow}}
     <br/><br/>
   </div>
 </template>
@@ -226,19 +225,10 @@ export default {
     },
     onEditData(index) {
       this.table[index].isEditable = true;
-      this.$v.editableRow.$touch();
+      this.onChangeData(index);
     },
-    changeName(value) {
-      this.editableRow.name = value;
-      this.$v.editableRow.name.$touch();
-    },
-    changeEmail(value) {
-      this.editableRow.email = value;
-      this.$v.editableRow.email.$touch();
-    },
-    changeDescription(value) {
-      this.editableRow.description = value;
-      this.$v.editableRow.description.$touch();
+    onChangeData(index) {
+      this.editableRow = {...this.table[index]};
     },
     async onSaveData(index) {
       this.table[index].isEditable = false;
@@ -297,5 +287,14 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  }
+
+  >>> .md-table .error {
+    position: absolute;
+    bottom: 0;
+  }
+
+  >>> .md-table .md-table-cell {
+    height: 90px;
   }
 </style>

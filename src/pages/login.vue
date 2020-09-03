@@ -13,7 +13,7 @@
           @change="$v.email.$touch()"
         />
         <div class="error" v-if="!$v.email.required">Password is required.</div>
-        <div class="error" v-if="!$v.email.email">Email must be correct.</div>
+        <div class="error" v-if="!$v.email.email">Email should be correct.</div>
       </fieldset>
       <fieldset :class="{ 'input-error': $v.password.$error }">
         <label for="password">Password</label>
