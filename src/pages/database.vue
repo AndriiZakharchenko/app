@@ -169,9 +169,10 @@ export default {
           .then(() => {
             //Reset fields
             this.$v.$reset();
-            Object.keys(this.form).forEach((key) => {
-              this.form[key] = '';
-            });
+            let form = this.form;
+            for (let key in form) {
+              form[key] = '';
+            }
             this.changeStatus('Added new post');
           })
           .catch((error) => {

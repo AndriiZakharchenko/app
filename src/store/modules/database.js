@@ -62,12 +62,12 @@ export default {
           if (tasks) {
             // the firebase send the object with unique id for each posts
             // we create new array and add the unique id to the each post
-            Object.keys(tasks).forEach(key => {
+            for (let key in tasks) {
               tasksArray.push({
                 ...tasks[key],
                 id: key,
               });
-            });
+            }
           }
           commit('fetchPosts', tasksArray);
         })

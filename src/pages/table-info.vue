@@ -21,16 +21,16 @@
         <label>Name</label>
         <input
           type="text"
-          v-model="form.name"
+          v-model.trim="form.name"
           @change="$v.form.name.$touch()"
         />
-        <div class="error" v-if="!$v.form.name.required">Title is required.</div>
+        <div class="error" v-if="!$v.form.name.required">Name is required.</div>
       </fieldset>
       <fieldset :class="{ 'input-error': $v.form.email.$error }">
         <label>Email</label>
         <input
           type="email"
-          v-model="form.email"
+          v-model.trim="form.email"
           @change="$v.form.email.$touch()"
         />
         <div class="error" v-if="!$v.form.email.required">Email is required.</div>
@@ -40,7 +40,7 @@
         <label>Description</label>
         <input
           type="text"
-          v-model="form.description"
+          v-model.trim="form.description"
           @change="$v.form.description.$touch()"
         />
         <div class="error" v-if="!$v.form.description.required">Description is required.</div>
@@ -48,9 +48,10 @@
       <md-button
         type="submit"
         :disabled="$v.form.$invalid"
-        class="md-raised"
-      >Add</md-button>
+        class="md-raised md-svg-loader"
+      >Add Data</md-button>
     </form>
+
     <md-table
       v-model="table"
       md-card
@@ -60,57 +61,71 @@
         <h1 class="md-title">Table</h1>
       </md-table-toolbar>
 
+      <md-table-empty-state>
+        Empty Data
+      </md-table-empty-state>
+
       <md-table-row
         slot-scope="{ item, index }"
         slot="md-table-row"
       >
         <md-table-cell md-label="ID" md-numeric >{{ index + 1 }}</md-table-cell>
         <md-table-cell md-label="Name">
-          <input
-            type="text"
-            :value="item.name"
-            :disabled="!item.isEditable"
-            @input="getInputVal($event.target.value, 'name')"
-          />
+          <fieldset :class="{ 'input-error': $v.editableRow.name.$error }">
+            <input
+              type="text"
+              v-model.trim="item.name"
+              :disabled="!item.isEditable"
+              @input="changeName($event.target.value)"
+            />
+            <div class="error" v-if="!$v.editableRow.name.required">Name is required.</div>
+          </fieldset>
         </md-table-cell>
         <md-table-cell md-label="Email">
-          <input
-            type="email"
-            :value="item.email"
-            :disabled="!item.isEditable"
-            @input="getInputVal($event.target.value, 'email')"
-          />
+          <fieldset :class="{ 'input-error': $v.editableRow.email.$error }">
+            <input
+              type="email"
+              v-model.trim="item.email"
+              :disabled="!item.isEditable"
+              @input="changeEmail($event.target.value)"
+            />
+            <div class="error" v-if="!$v.editableRow.email.required">Email is required.</div>
+            <div class="error" v-if="!$v.editableRow.email.email">Email should be correct.</div>
+          </fieldset>
         </md-table-cell>
         <md-table-cell md-label="Description">
-          <input
-            type="text"
-            :value="item.description"
-            :disabled="!item.isEditable"
-            @input="getInputVal($event.target.value, 'description')"
-          />
+          <fieldset :class="{ 'input-error': $v.editableRow.description.$error }">
+            <input
+              type="text"
+              v-model.trim="item.description"
+              :disabled="!item.isEditable"
+              @input="changeDescription($event.target.value)"
+            />
+            <div class="error" v-if="!$v.editableRow.description.required">Description is required.</div>
+          </fieldset>
         </md-table-cell>
         <md-table-cell class="table-actions" md-label="Actions">
           <md-button
             class="md-fab md-mini md-primary"
-            v-show="item.isEditable"
-            @click="onSaveData(index)"
             title="Save"
-            :disabled="saveDisabled"
+            v-show="item.isEditable"
+            :disabled="$v.editableRow.$invalid"
+            @click="onSaveData(index)"
           >
             <md-icon>save</md-icon>
           </md-button>
           <md-button
             class="md-fab md-mini md-primary"
+            title="Edit"
             v-show="!item.isEditable"
             @click="onEditData(index)"
-            title="Edit"
           >
             <md-icon>edit</md-icon>
           </md-button>
           <md-button
             class="md-fab md-mini md-accent"
-            @click="showDeleteModal(item.id)"
             title="Delete"
+            @click="showDeleteModal(item.id)"
           >
             <md-icon>delete</md-icon>
           </md-button>
@@ -118,32 +133,25 @@
       </md-table-row>
     </md-table>
     <br/><br/>
+    {{$v.editableRow}}
     <br/><br/>
   </div>
 </template>
 
 <script>
 import { required, email } from 'vuelidate/lib/validators';
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'table-info',
   async created() {
-    await this.getData()
-      .then(() => {})
-      .catch((error) => {
-        this.changeStatus(error);
-      });
-  },
-  computed: {
-    ...mapState({
-      table: state => state.table.table,
-    }),
+    await this.updateData();
   },
   data: () => ({
     id: null,
     showDeleteDialog: false,
     saveDisabled: false,
+    table: [],
     form: {
       name: '',
       email: '',
@@ -168,6 +176,18 @@ export default {
         required,
       },
     },
+    editableRow: {
+      name: {
+        required,
+      },
+      email: {
+        email,
+        required,
+      },
+      description: {
+        required,
+      },
+    },
   },
   methods: {
     ...mapActions({
@@ -178,7 +198,6 @@ export default {
     }),
     ...mapMutations({
       changeStatus: 'app/changeStatus',
-      changeRow: 'table/changeRow',
     }),
     async onSubmit() {
       this.$v.form.$touch();
@@ -192,43 +211,46 @@ export default {
           .then(() => {
             //Reset fields
             this.$v.$reset();
-            Object.keys(this.form).forEach((key) => {
-              this.form[key] = '';
-            });
+            let form = this.form;
+            for (let key in form) {
+              form[key] = '';
+            }
             this.changeStatus('Added new data to table');
           })
           .catch((error) => {
             this.changeStatus(error);
           });
+
+        await this.updateData();
       }
     },
     onEditData(index) {
-      this.changeRow({
-        index,
-        isEditable: true,
-      });
-      this.editableRow = Object.assign(this.table[index]);
+      this.table[index].isEditable = true;
+      this.$v.editableRow.$touch();
+    },
+    changeName(value) {
+      this.editableRow.name = value;
+      this.$v.editableRow.name.$touch();
+    },
+    changeEmail(value) {
+      this.editableRow.email = value;
+      this.$v.editableRow.email.$touch();
+    },
+    changeDescription(value) {
+      this.editableRow.description = value;
+      this.$v.editableRow.description.$touch();
     },
     async onSaveData(index) {
-      this.changeRow({
-        index,
-        isEditable: false,
-      });
-      await this.editData(this.editableRow)
+      this.table[index].isEditable = false;
+      await this.editData(this.table[index])
         .then(() => {
           this.changeStatus('Changed current row');
         })
         .catch((error) => {
           this.changeStatus(error);
         });
-    },
-    getInputVal(value, type) {
-      this.editableRow[type] = value;
-      this.saveDisabled = false;
-      if (!value) {
-        this.changeStatus(`Input ${type} shouldn't be empty`);
-        this.saveDisabled = true;
-      }
+
+      await this.updateData();
     },
     showDeleteModal(id) {
       this.showDeleteDialog = true;
@@ -245,6 +267,17 @@ export default {
         .finally(() => {
           this.showDeleteDialog = false;
         });
+
+      await this.updateData();
+    },
+    updateData() {
+      this.getData()
+        .then((dataArray) => {
+          this.table = dataArray;
+        })
+        .catch((error) => {
+          this.changeStatus(error);
+        });
     },
   },
 };
@@ -253,6 +286,11 @@ export default {
 <style scoped>
   >>> .md-table {
     text-align: left;
+  }
+
+  >>> .md-table fieldset {
+    padding: 0;
+    margin-bottom: 0;
   }
 
   >>> .table-actions .md-table-cell-container {

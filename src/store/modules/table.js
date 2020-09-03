@@ -2,9 +2,7 @@ import firebase from 'firebase/app';
 
 export default {
   namespaced: true,
-  state: {
-    table: [],
-  },
+  state: {},
   getters: {},
   actions: {
     async addData({commit, dispatch, rootState}, payload) {
@@ -21,13 +19,13 @@ export default {
           commit('app/setLoading', false, { root: true });
         });
     },
-    async editData({commit, dispatch, rootState}, {name, email, description, id}) {
+    async editData({commit, dispatch, rootState}, data) {
       commit('app/setLoading', true, { root: true });
       const user = rootState.user.user;
-      await firebase.database().ref(`users/${user}/table`).child(id).update({
-        name,
-        email,
-        description,
+      await firebase.database().ref(`users/${user}/table`).child(data.id).update({
+        name: data.name,
+        email: data.email,
+        description: data.description,
       })
         .then(() => {
           dispatch('getData');
@@ -56,20 +54,21 @@ export default {
     async getData({commit, rootState}) {
       commit('app/setLoading', true, { root: true });
       const user = rootState.user.user;
+      const dataArray = [];
       await firebase.database().ref(`users/${user}/table`).once('value')
         .then((response) => {
-          const dataArray = [];
           const data = response.val();
           if (data) {
-            Object.keys(data).forEach(key => {
+            // the firebase send the object with unique id for each posts
+            // we create new array and add the unique id to the each post
+            for (let key in data) {
               dataArray.push({
                 ...data[key],
                 id: key,
                 isEditable: false,
               });
-            });
+            }
           }
-          commit('fetchData', dataArray);
         })
         .catch((error) => {
           throw error;
@@ -77,14 +76,9 @@ export default {
         .finally(() => {
           commit('app/setLoading', false, { root: true });
         });
+
+      return dataArray;
     },
   },
-  mutations: {
-    fetchData(state, payload) {
-      state.table = payload;
-    },
-    changeRow(state, payload) {
-      state.table[payload.index].isEditable = payload.isEditable;
-    },
-  },
+  mutations: {},
 };
