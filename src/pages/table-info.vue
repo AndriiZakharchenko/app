@@ -118,6 +118,7 @@
             class="md-fab md-mini md-primary"
             title="Edit"
             v-show="!item.isEditable"
+            :disabled="disableEditBtn"
             @click="onEditData(index)"
           >
             <md-icon>edit</md-icon>
@@ -188,6 +189,11 @@ export default {
       },
     },
   },
+  computed: {
+    disableEditBtn() {
+      return !!this.editableRow.isEditable;
+    },
+  },
   methods: {
     ...mapActions({
       addData: 'table/addData',
@@ -235,6 +241,7 @@ export default {
       await this.editData(this.table[index])
         .then(() => {
           this.changeStatus('Changed current row');
+          this.editableRow = [];
         })
         .catch((error) => {
           this.changeStatus(error);
