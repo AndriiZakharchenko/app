@@ -15,43 +15,60 @@
       </md-dialog-actions>
     </md-dialog>
 
-    <h1>Table-info</h1>
-    <form @submit.prevent="onSubmit" novalidate>
-      <fieldset :class="{ 'input-error': $v.form.name.$error }">
-        <label>Name</label>
-        <input
-          type="text"
-          v-model.trim="form.name"
-          @change="$v.form.name.$touch()"
-        />
-        <div class="error" v-if="!$v.form.name.required">Name is required.</div>
-      </fieldset>
-      <fieldset :class="{ 'input-error': $v.form.email.$error }">
-        <label>Email</label>
-        <input
-          type="email"
-          v-model.trim="form.email"
-          @change="$v.form.email.$touch()"
-        />
-        <div class="error" v-if="!$v.form.email.required">Email is required.</div>
-        <div class="error" v-if="!$v.form.email.email">Email should be correct.</div>
-      </fieldset>
-      <fieldset :class="{ 'input-error': $v.form.description.$error }">
-        <label>Description</label>
-        <input
-          type="text"
-          v-model.trim="form.description"
-          @change="$v.form.description.$touch()"
-        />
-        <div class="error" v-if="!$v.form.description.required">Description is required.</div>
-      </fieldset>
-      <md-button
-        type="submit"
-        :disabled="$v.form.$invalid"
-        class="md-raised md-svg-loader"
-      >Add Data</md-button>
-    </form>
+    <md-dialog :md-active.sync="showAddDialog">
+      <md-dialog-title>Add new data to table</md-dialog-title>
+      <form @submit.prevent="onSubmit" novalidate>
+        <fieldset :class="{ 'input-error': $v.form.name.$error }">
+          <label>Name</label>
+          <input
+            type="text"
+            v-model.trim="form.name"
+            @change="$v.form.name.$touch()"
+          />
+          <div class="error" v-if="!$v.form.name.required">Name is required.</div>
+        </fieldset>
+        <fieldset :class="{ 'input-error': $v.form.email.$error }">
+          <label>Email</label>
+          <input
+            type="email"
+            v-model.trim="form.email"
+            @change="$v.form.email.$touch()"
+          />
+          <div class="error" v-if="!$v.form.email.required">Email is required.</div>
+          <div class="error" v-if="!$v.form.email.email">Email should be correct.</div>
+        </fieldset>
+        <fieldset :class="{ 'input-error': $v.form.description.$error }">
+          <label>Description</label>
+          <input
+            type="text"
+            v-model.trim="form.description"
+            @change="$v.form.description.$touch()"
+          />
+          <div class="error" v-if="!$v.form.description.required">Description is required.</div>
+        </fieldset>
 
+      </form>
+      <md-dialog-actions>
+        <md-button
+          class="md-primary"
+          @click="showAddDialog = false"
+        >Close</md-button>
+        <md-button
+          type="submit"
+          class="md-raised"
+          :disabled="$v.form.$invalid"
+          @click="onSubmit"
+        >Add Row</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+
+    <h1>Table-info</h1>
+    <md-button
+      type="button"
+      class="md-raised"
+      @click="showAddDialog = true"
+    >Add Row</md-button>
+    <br/><br/>
     <md-table
       v-model="table"
       md-card
@@ -149,6 +166,7 @@ export default {
   },
   data: () => ({
     id: null,
+    showAddDialog: false,
     showDeleteDialog: false,
     saveDisabled: false,
     table: [],
@@ -220,6 +238,7 @@ export default {
             for (let key in form) {
               form[key] = '';
             }
+            this.showAddDialog = false;
             this.changeStatus('Added new data to table');
           })
           .catch((error) => {
@@ -288,6 +307,14 @@ export default {
   >>> .md-table fieldset {
     padding: 0;
     margin-bottom: 0;
+  }
+
+  >>> .md-dialog-container {
+    min-width: 450px !important;
+  }
+
+  >>> .md-dialog-container form {
+    margin: 0;
   }
 
   >>> .table-actions .md-table-cell-container {
