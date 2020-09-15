@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="layout">
-    <!--    Preloader    -->
+    <!-- PRELOADER -->
     <div
       v-if="showPreloader"
       class="icon-load"
@@ -13,8 +13,9 @@
         <div class="sk-cube3 sk-cube"></div>
       </div>
     </div>
+    <!-- PRELOADER EOF -->
 
-    <!--    Notification    -->
+    <!-- NOTIFICATION -->
     <md-snackbar
       class="md-theme-demo-light"
       md-position="center"
@@ -24,6 +25,7 @@
     >
       <span>{{ status }}</span>
     </md-snackbar>
+    <!-- NOTIFICATION EOF-->
 
     <the-header />
     <main>
@@ -48,7 +50,7 @@ export default {
   mounted() {
     if (this.preloader) {
       setTimeout(() => {
-        this.$store.commit('app/removePreloader');
+        this.$store.commit('app/REMOVE_PRELOADER');
       }, 1000);
       setTimeout(() => {
         this.showPreloader = false;
@@ -70,7 +72,7 @@ export default {
       },
       set(val) {
         setTimeout(() => {
-          this.$store.commit('app/clearStatus', val);
+          this.$store.commit('app/CLEAR_STATUS', val);
         }, this.statusDuration);
       },
     },

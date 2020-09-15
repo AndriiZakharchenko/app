@@ -5,22 +5,22 @@ export default {
   state: {},
   getters: {},
   actions: {
-    async addData({commit, dispatch, rootState}, payload) {
-      commit('app/setLoading', true, { root: true });
+    async ADD_DATA({commit, dispatch, rootState}, payload) {
+      commit('app/SET_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/table`).push(payload)
         .then(() => {
-          dispatch('getData');
+          dispatch('GET_DATA');
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
-    async editData({commit, dispatch, rootState}, data) {
-      commit('app/setLoading', true, { root: true });
+    async EDIT_DATA({commit, dispatch, rootState}, data) {
+      commit('app/SET_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/table`).child(data.id).update({
         name: data.name,
@@ -28,31 +28,31 @@ export default {
         description: data.description,
       })
         .then(() => {
-          dispatch('getData');
+          dispatch('GET_DATA');
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
-    async deleteData({commit, dispatch, rootState}, id) {
-      commit('app/setLoading', true, { root: true });
+    async DELETE_DATA({commit, dispatch, rootState}, id) {
+      commit('app/SET_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/table`).child(id).remove()
         .then(() => {
-          dispatch('getData');
+          dispatch('GET_DATA');
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
-    async getData({commit, rootState}) {
-      commit('app/setLoading', true, { root: true });
+    async GET_DATA({commit, rootState}) {
+      commit('app/SET_LOADING', true, { root: true });
       const user = rootState.user.user;
       const dataArray = [];
       await firebase.database().ref(`users/${user}/table`).once('value')
@@ -74,7 +74,7 @@ export default {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
 
       return dataArray;

@@ -10,7 +10,7 @@
         <md-button
           class="md-primary"
           type="submit"
-          @click.native="onDeleteData"
+          @click.native="onDELETE_DATA"
         >Delete</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -46,7 +46,6 @@
           />
           <div class="error" v-if="!$v.form.description.required">Description is required.</div>
         </fieldset>
-
       </form>
       <md-dialog-actions>
         <md-button
@@ -68,7 +67,6 @@
       class="md-raised"
       @click="showAddDialog = true"
     >Add Row</md-button>
-    <br/><br/>
     <md-table
       v-model="table"
       md-card
@@ -77,11 +75,9 @@
       <md-table-toolbar>
         <h1 class="md-title">Table</h1>
       </md-table-toolbar>
-
       <md-table-empty-state>
         Empty Data
       </md-table-empty-state>
-
       <md-table-row
         slot-scope="{ item, index }"
         slot="md-table-row"
@@ -136,7 +132,7 @@
             title="Edit"
             v-show="!item.isEditable"
             :disabled="disableEditBtn"
-            @click="onEditData(index)"
+            @click="onEDIT_DATA(index)"
           >
             <md-icon>edit</md-icon>
           </md-button>
@@ -150,8 +146,6 @@
         </md-table-cell>
       </md-table-row>
     </md-table>
-    <br/><br/>
-    <br/><br/>
   </div>
 </template>
 
@@ -214,13 +208,13 @@ export default {
   },
   methods: {
     ...mapActions({
-      addData: 'table/addData',
-      editData: 'table/editData',
-      deleteData: 'table/deleteData',
-      getData: 'table/getData',
+      ADD_DATA: 'table/ADD_DATA',
+      EDIT_DATA: 'table/EDIT_DATA',
+      DELETE_DATA: 'table/DELETE_DATA',
+      GET_DATA: 'table/GET_DATA',
     }),
     ...mapMutations({
-      changeStatus: 'app/changeStatus',
+      CHANGE_STATUS: 'app/CHANGE_STATUS',
     }),
     async onSubmit() {
       this.$v.form.$touch();
@@ -230,7 +224,7 @@ export default {
           email: this.form.email,
           description: this.form.description,
         };
-        await this.addData(data)
+        await this.ADD_DATA(data)
           .then(() => {
             //Reset fields
             this.$v.$reset();
@@ -239,16 +233,16 @@ export default {
               form[key] = '';
             }
             this.showAddDialog = false;
-            this.changeStatus('Added new data to table');
+            this.CHANGE_STATUS('Added new data to table');
           })
           .catch((error) => {
-            this.changeStatus(error);
+            this.CHANGE_STATUS(error);
           });
 
         await this.updateData();
       }
     },
-    onEditData(index) {
+    onEDIT_DATA(index) {
       this.table[index].isEditable = true;
       this.onChangeData(index);
     },
@@ -257,13 +251,13 @@ export default {
     },
     async onSaveData(index) {
       this.table[index].isEditable = false;
-      await this.editData(this.table[index])
+      await this.EDIT_DATA(this.table[index])
         .then(() => {
-          this.changeStatus('Changed current row');
+          this.CHANGE_STATUS('Changed current row');
           this.editableRow = [];
         })
         .catch((error) => {
-          this.changeStatus(error);
+          this.CHANGE_STATUS(error);
         });
 
       await this.updateData();
@@ -272,13 +266,13 @@ export default {
       this.showDeleteDialog = true;
       this.id = id;
     },
-    async onDeleteData() {
-      await this.deleteData(this.id)
+    async onDELETE_DATA() {
+      await this.DELETE_DATA(this.id)
         .then(() => {
-          this.changeStatus('Deleted current post');
+          this.CHANGE_STATUS('Deleted current post');
         })
         .catch((error) => {
-          this.changeStatus(error);
+          this.CHANGE_STATUS(error);
         })
         .finally(() => {
           this.showDeleteDialog = false;
@@ -287,12 +281,12 @@ export default {
       await this.updateData();
     },
     updateData() {
-      this.getData()
+      this.GET_DATA()
         .then((dataArray) => {
           this.table = dataArray;
         })
         .catch((error) => {
-          this.changeStatus(error);
+          this.CHANGE_STATUS(error);
         });
     },
   },

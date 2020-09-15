@@ -11,7 +11,7 @@
         <md-button
           class="md-primary"
           type="submit"
-          @click.native="onDeletePost"
+          @click.native="onDELETE_POST"
         >Delete</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -44,7 +44,7 @@
           class="md-primary"
           type="submit"
           :disabled="$v.formEdit.$invalid"
-          @click.native="onEditPost"
+          @click.native="onEDIT_POST"
         >Save</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -74,7 +74,7 @@
         class="md-raised"
       >Add</md-button>
     </form>
-    <br/>
+
     <div class="post">
       <transition-group
         enter-active-class="animated fadeInUp"
@@ -103,10 +103,10 @@ import { mapState, mapActions, mapMutations } from 'vuex';
 export default {
   name: 'database',
   async created() {
-    await this.getPosts()
+    await this.GET_POSTS()
       .then(() => {})
       .catch((error) => {
-        this.changeStatus(error);
+        this.CHANGE_STATUS(error);
       });
   },
   data: () => ({
@@ -150,13 +150,13 @@ export default {
   },
   methods: {
     ...mapActions({
-      getPosts: 'database/getPosts',
-      addPost: 'database/addPost',
-      editPost: 'database/editPost',
-      deletePost: 'database/deletePost',
+      GET_POSTS: 'database/GET_POSTS',
+      ADD_POST: 'database/ADD_POST',
+      EDIT_POST: 'database/EDIT_POST',
+      DELETE_POST: 'database/DELETE_POST',
     }),
     ...mapMutations({
-      changeStatus: 'app/changeStatus',
+      CHANGE_STATUS: 'app/CHANGE_STATUS',
     }),
     async onSubmit() {
       this.$v.form.$touch();
@@ -165,7 +165,7 @@ export default {
           title: this.form.title,
           description: this.form.description,
         };
-        await this.addPost(post)
+        await this.ADD_POST(post)
           .then(() => {
             //Reset fields
             this.$v.$reset();
@@ -173,10 +173,10 @@ export default {
             for (let key in form) {
               form[key] = '';
             }
-            this.changeStatus('Added new post');
+            this.CHANGE_STATUS('Added new post');
           })
           .catch((error) => {
-            this.changeStatus(error);
+            this.CHANGE_STATUS(error);
           });
       }
     },
@@ -184,15 +184,15 @@ export default {
       this.showEditDialog = true;
       Object.assign(this.formEdit, post);
     },
-    async onEditPost() {
+    async onEDIT_POST() {
       this.$v.formEdit.$touch();
       if (!this.$v.formEdit.$invalid) {
-        await this.editPost(this.formEdit)
+        await this.EDIT_POST(this.formEdit)
           .then(() => {
-            this.changeStatus('Changed current post');
+            this.CHANGE_STATUS('Changed current post');
           })
           .catch((error) => {
-            this.changeStatus(error);
+            this.CHANGE_STATUS(error);
           })
           .finally(() => {
             this.showEditDialog = false;
@@ -203,13 +203,13 @@ export default {
       this.showDeleteDialog = true;
       this.id = id;
     },
-    async onDeletePost() {
-      await this.deletePost(this.id)
+    async onDELETE_POST() {
+      await this.DELETE_POST(this.id)
         .then(() => {
-          this.changeStatus('Deleted current post');
+          this.CHANGE_STATUS('Deleted current post');
         })
         .catch((error) => {
-          this.changeStatus(error);
+          this.CHANGE_STATUS(error);
         })
         .finally(() => {
           this.showDeleteDialog = false;

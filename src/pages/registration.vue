@@ -93,27 +93,27 @@ export default {
   },
   methods: {
     ...mapActions({
-      registerUser: 'user/registerUser',
+      REGISTER_USER: 'user/REGISTER_USER',
     }),
     ...mapMutations({
-      changeStatus: 'app/changeStatus',
+      CHANGE_STATUS: 'app/CHANGE_STATUS',
     }),
     async onSubmit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.changeStatus('Please enter the valid values in the form');
+        this.CHANGE_STATUS('Please enter the valid values in the form');
       } else {
         const user = {
           email: this.email,
           password: this.password,
         };
-        await this.registerUser(user)
+        await this.REGISTER_USER(user)
           .then(() => {
-            this.changeStatus('Registered');
+            this.CHANGE_STATUS('Registered');
             this.$router.push('/');
           })
           .catch((error) => {
-            this.changeStatus(error);
+            this.CHANGE_STATUS(error);
           });
       }
     },

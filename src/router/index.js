@@ -87,10 +87,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.getters['user/isAuthenticated'];
+  const IS_AUTHENTICATED = store.getters['user/IS_AUTHENTICATED'];
   const authPage = to.meta.authPage;
 
-  if (isAuthenticated) {
+  if (IS_AUTHENTICATED) {
     if (authPage) {
       next({name: 'home', query: {message: 'You are logged'}});
       return;

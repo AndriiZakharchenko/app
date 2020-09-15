@@ -22,7 +22,7 @@ export default {
     ],
   },
   getters: {
-    filterFilms(state) {
+    FILTER_FILMS(state) {
       return val => {
         switch (val) {
         case FILM_FILTERS.all:
@@ -39,7 +39,7 @@ export default {
   },
   actions: {},
   mutations: {
-    addFilm(state, payload) {
+    ADD_FILM(state, payload) {
       state.films.push(payload);
     },
   },

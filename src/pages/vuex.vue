@@ -1,10 +1,8 @@
 <template>
   <div>
     <h1>Vuex & Axios</h1>
-    <br/>
     <form>
       <input type="text" v-model.trim="message" />
-      <br/>
       <p>V model in vuex - {{ message }}</p>
     </form>
     <md-button
@@ -38,20 +36,20 @@ export default {
         return this.$store.state.posts.message;
       },
       set(val) {
-        this.updateMessage(val);
+        this.UPDATE_MESSAGE(val);
       },
     },
   },
   methods: {
     ...mapMutations({
-      changeStatus: 'app/changeStatus',
-      updateMessage: 'posts/updateMessage',
+      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      UPDATE_MESSAGE: 'posts/UPDATE_MESSAGE',
     }),
     async getLists() {
-      await this.$store.dispatch('posts/getPosts')
+      await this.$store.dispatch('posts/GET_POSTS')
         .then(() => {})
         .catch((error) => {
-          this.changeStatus(error);
+          this.CHANGE_STATUS(error);
         });
     },
   },

@@ -7,53 +7,53 @@ export default {
   },
   getters: {},
   actions: {
-    async addPost({commit, dispatch, rootState}, payload) {
-      commit('app/setLoading', true, { root: true });
+    async ADD_POST({commit, dispatch, rootState}, payload) {
+      commit('app/SET_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/posts`).push(payload)
         .then(() => {
-          dispatch('getPosts');
+          dispatch('GET_POSTS');
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
-    async editPost({commit, dispatch, rootState}, {title, description, id}) {
-      commit('app/setLoading', true, { root: true });
+    async EDIT_POST({commit, dispatch, rootState}, {title, description, id}) {
+      commit('app/SET_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/posts`).child(id).update({
         title,
         description,
       })
         .then(() => {
-          dispatch('getPosts');
+          dispatch('GET_POSTS');
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
-    async deletePost({commit, dispatch, rootState}, id) {
-      commit('app/setLoading', true, { root: true });
+    async DELETE_POST({commit, dispatch, rootState}, id) {
+      commit('app/SET_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/posts`).child(id).remove()
         .then(() => {
-          dispatch('getPosts');
+          dispatch('GET_POSTS');
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
-    async getPosts({commit, rootState}) {
-      commit('app/setLoading', true, { root: true });
+    async GET_POSTS({commit, rootState}) {
+      commit('app/SET_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/posts`).once('value')
         .then((response) => {
@@ -69,18 +69,18 @@ export default {
               });
             }
           }
-          commit('fetchPosts', tasksArray);
+          commit('FETCH_POSTS', tasksArray);
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
   },
   mutations: {
-    fetchPosts(state, payload) {
+    FETCH_POSTS(state, payload) {
       state.posts = payload;
     },
   },

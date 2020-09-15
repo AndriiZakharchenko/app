@@ -5,15 +5,15 @@
       <a
         role="button"
         class="active"
-        @click="filterFilms(FILM_FILTERS.all, $event)"
+        @click="FILTER_FILMS(FILM_FILTERS.all, $event)"
       >All</a>
       <a
         role="button"
-        @click="filterFilms(FILM_FILTERS.completed, $event)"
+        @click="FILTER_FILMS(FILM_FILTERS.completed, $event)"
       >Completed</a>
       <a
         role="button"
-        @click="filterFilms(FILM_FILTERS.active, $event)"
+        @click="FILTER_FILMS(FILM_FILTERS.active, $event)"
       >Active</a>
     </div>
     <div
@@ -23,7 +23,7 @@
       <transition-group
         enter-active-class="animated fadeInUp"
         leave-active-class="animated fadeInDown"
->
+      >
         <div
           class="film__item"
           v-for="(film) in films"
@@ -54,10 +54,10 @@ export default {
     const message = this.$route.query.message;
     const messageBool = !!message;
     if (messageBool) {
-      this.changeStatus(message);
+      this.CHANGE_STATUS(message);
     }
 
-    this.films = this.$store.getters['films/filterFilms'](FILM_FILTERS.all);
+    this.films = this.$store.getters['films/FILTER_FILMS'](FILM_FILTERS.all);
   },
   data: () => ({
     films: [],
@@ -66,16 +66,16 @@ export default {
   }),
   methods: {
     ...mapMutations({
-      changeStatus: 'app/changeStatus',
+      CHANGE_STATUS: 'app/CHANGE_STATUS',
     }),
-    filterFilms(val, event) {
+    FILTER_FILMS(val, event) {
       const filterElements = document.querySelectorAll('.filter-list a');
       filterElements.forEach(elem => {
         elem.classList.remove('active');
       });
       event.target.classList.add('active');
 
-      return this.films = this.$store.getters['films/filterFilms'](val);
+      return this.films = this.$store.getters['films/FILTER_FILMS'](val);
     },
   },
 };

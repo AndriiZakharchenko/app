@@ -6,44 +6,44 @@ export default {
     user: null,
   },
   getters: {
-    isAuthenticated(state) {
+    IS_AUTHENTICATED(state) {
       return state.user !== null;
     },
   },
   actions: {
-    async registerUser({commit}, {email, password}) {
-      commit('app/setLoading', true, { root: true });
+    async REGISTER_USER({commit}, {email, password}) {
+      commit('app/SET_LOADING', true, { root: true });
       await firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((res) => {
-          commit('setUser', res.user.uid);
+          commit('SET_USER', res.user.uid);
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
-    async loginUser({commit}, {email, password}) {
-      commit('app/setLoading', true, { root: true });
+    async LOGIN_USER({commit}, {email, password}) {
+      commit('app/SET_LOADING', true, { root: true });
       await firebase.auth().signInWithEmailAndPassword(email, password)
         .then((res) => {
-          commit('setUser', res.user.uid);
+          commit('SET_USER', res.user.uid);
         })
         .catch((error) => {
           throw error;
         })
         .finally(() => {
-          commit('app/setLoading', false, { root: true });
+          commit('app/SET_LOADING', false, { root: true });
         });
     },
-    loggedUser({commit}, payload) {
-      commit('setUser', payload.uid);
+    LOGGED_USER({commit}, payload) {
+      commit('SET_USER', payload.uid);
     },
-    async logoutUser({commit}) {
+    async LOGOUT_USER({commit}) {
       await firebase.auth().signOut()
         .then(() => {
-          commit('setUser', null);
+          commit('SET_USER', null);
         })
         .catch((error) => {
           throw error;
@@ -51,7 +51,7 @@ export default {
     },
   },
   mutations: {
-    setUser(state, payload) {
+    SET_USER(state, payload) {
       state.user = payload;
     },
   },

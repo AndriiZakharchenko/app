@@ -9,17 +9,17 @@ export default {
   getters: {},
   actions: {},
   mutations: {
-    removePreloader(state) {
+    REMOVE_PRELOADER(state) {
       state.preloader = false;
     },
-    setLoading(state, payload) {
+    SET_LOADING(state, payload) {
       state.isLoading = payload;
     },
-    changeStatus(state, payload) {
+    CHANGE_STATUS(state, payload) {
       state.status = payload;
       state.showStatus = true;
     },
-    clearStatus(state) {
+    CLEAR_STATUS(state) {
       state.status = '';
       state.showStatus = false;
     },

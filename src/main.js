@@ -11,7 +11,7 @@ Vue.config.productionTip = false;
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
-    store.dispatch('user/loggedUser', user)
+    store.dispatch('user/LOGGED_USER', user)
       .then(() => {})
       .catch((error) => {
         console.error(error);

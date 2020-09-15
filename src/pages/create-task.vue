@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Add new film</h1>
-    <form @submit.prevent="onSubmit">
+    <form @submit.prevent="ADD_FILMData">
       <fieldset :class="{ 'input-error': $v.title.$error }">
         <label>Film title</label>
         <input
@@ -49,10 +49,10 @@ export default {
   },
   methods: {
     ...mapMutations({
-      addFilm: 'films/addFilm',
-      changeStatus: 'app/changeStatus',
+      ADD_FILM: 'films/ADD_FILM',
+      CHANGE_STATUS: 'app/CHANGE_STATUS',
     }),
-    onSubmit() {
+    ADD_FILMData() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         const film = {
@@ -60,8 +60,8 @@ export default {
           description: this.description,
           completed: false,
         };
-        this.addFilm(film);
-        this.changeStatus('Added new film');
+        this.ADD_FILM(film);
+        this.CHANGE_STATUS('Added new film');
         setTimeout(() => {
           this.$router.push('/');
         }, 1000);

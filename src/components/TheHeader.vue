@@ -1,6 +1,6 @@
 <template>
   <header>
-    <b>Authorized: {{ isAuthenticated }}</b>
+    <b>Authorized: {{ IS_AUTHENTICATED }}</b>
     <nav class="nav">
       <router-link
         v-for="(link, i) in navLinks"
@@ -9,7 +9,7 @@
       >{{ link.label }}</router-link>
       <a
         href="#"
-        v-if="isAuthenticated"
+        v-if="IS_AUTHENTICATED"
         @click.prevent="logout"
       >Log out</a>
     </nav>
@@ -23,10 +23,10 @@ export default {
   name: 'TheHeader',
   computed: {
     ...mapGetters({
-      isAuthenticated: 'user/isAuthenticated',
+      IS_AUTHENTICATED: 'user/IS_AUTHENTICATED',
     }),
     navLinks() {
-      if (this.isAuthenticated) {
+      if (this.IS_AUTHENTICATED) {
         return [
           {
             name: 'home',
@@ -73,19 +73,19 @@ export default {
   },
   methods: {
     ...mapActions({
-      logoutUser: 'user/logoutUser',
+      LOGOUT_USER: 'user/LOGOUT_USER',
     }),
     ...mapMutations({
-      changeStatus: 'app/changeStatus',
+      CHANGE_STATUS: 'app/CHANGE_STATUS',
     }),
     async logout() {
-      await this.logoutUser()
+      await this.LOGOUT_USER()
         .then(() => {
-          this.changeStatus('Logout');
+          this.CHANGE_STATUS('Logout');
           this.$router.push({name: 'login'});
         })
         .catch((error) => {
-          this.changeStatus(error);
+          this.CHANGE_STATUS(error);
         });
     },
   },
