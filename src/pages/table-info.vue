@@ -18,46 +18,46 @@
     <md-dialog :md-active.sync="isShowAddDataModal">
       <md-dialog-title>Add new data to table</md-dialog-title>
       <form @submit.prevent="addData" novalidate>
-        <fieldset :class="{ 'input-error': $v.form.name.$error }">
+        <fieldset :class="{ 'input-error': $v.data.name.$error }">
           <label>Name</label>
           <input
             type="text"
-            v-model.trim="form.name"
-            @change="$v.form.name.$touch()"
+            v-model.trim="data.name"
+            @change="$v.data.name.$touch()"
           />
-          <div class="error" v-if="!$v.form.name.required">Name is required.</div>
+          <div class="error" v-if="!$v.data.name.required">Name is required.</div>
         </fieldset>
-        <fieldset :class="{ 'input-error': $v.form.email.$error }">
+        <fieldset :class="{ 'input-error': $v.data.email.$error }">
           <label>Email</label>
           <input
             type="email"
-            v-model.trim="form.email"
-            @change="$v.form.email.$touch()"
+            v-model.trim="data.email"
+            @change="$v.data.email.$touch()"
           />
-          <div class="error" v-if="!$v.form.email.required">Email is required.</div>
-          <div class="error" v-if="!$v.form.email.email">Email should be correct.</div>
+          <div class="error" v-if="!$v.data.email.required">Email is required.</div>
+          <div class="error" v-if="!$v.data.email.email">Email should be correct.</div>
         </fieldset>
-        <fieldset :class="{ 'input-error': $v.form.description.$error }">
+        <fieldset :class="{ 'input-error': $v.data.description.$error }">
           <label>Description</label>
           <input
             type="text"
-            v-model.trim="form.description"
-            @change="$v.form.description.$touch()"
+            v-model.trim="data.description"
+            @change="$v.data.description.$touch()"
           />
-          <div class="error" v-if="!$v.form.description.required">Description is required.</div>
+          <div class="error" v-if="!$v.data.description.required">Description is required.</div>
         </fieldset>
+        <md-dialog-actions>
+          <md-button
+            class="md-primary"
+            @click="isShowAddDataModal = false"
+          >Close</md-button>
+          <md-button
+            type="submit"
+            class="md-raised"
+            :disabled="$v.data.$invalid"
+          >Add Row</md-button>
+        </md-dialog-actions>
       </form>
-      <md-dialog-actions>
-        <md-button
-          class="md-primary"
-          @click="isShowAddDataModal = false"
-        >Close</md-button>
-        <md-button
-          type="submit"
-          class="md-raised"
-          :disabled="$v.form.$invalid"
-        >Add Row</md-button>
-      </md-dialog-actions>
     </md-dialog>
 
     <h1>Table-info</h1>
@@ -65,7 +65,7 @@
       type="button"
       class="md-raised"
       @click="isShowAddDataModal = true"
-    >Add Row</md-button>
+    >Add Data</md-button>
     <md-table
       v-model="table"
       md-card
@@ -83,37 +83,37 @@
       >
         <md-table-cell md-label="ID" md-numeric >{{ index + 1 }}</md-table-cell>
         <md-table-cell md-label="Name">
-          <fieldset :class="{ 'input-error': $v.editableRow.name.$invalid && table[index].isEditable }">
+          <fieldset :class="{ 'input-error': $v.editableData.name.$invalid && table[index].isEditable }">
             <input
               type="text"
               v-model.trim="item.name"
               :disabled="!item.isEditable"
               @change="changeData(index)"
             />
-            <div class="error" v-if="!$v.editableRow.name.required">Name is required.</div>
+            <div class="error" v-if="!$v.editableData.name.required">Name is required.</div>
           </fieldset>
         </md-table-cell>
         <md-table-cell md-label="Email">
-          <fieldset :class="{ 'input-error': $v.editableRow.email.$invalid && table[index].isEditable }">
+          <fieldset :class="{ 'input-error': $v.editableData.email.$invalid && table[index].isEditable }">
             <input
               type="email"
               v-model.trim="item.email"
               :disabled="!item.isEditable"
               @change="changeData(index)"
             />
-            <div class="error" v-if="!$v.editableRow.email.required">Email is required.</div>
-            <div class="error" v-if="!$v.editableRow.email.email">Email should be correct.</div>
+            <div class="error" v-if="!$v.editableData.email.required">Email is required.</div>
+            <div class="error" v-if="!$v.editableData.email.email">Email should be correct.</div>
           </fieldset>
         </md-table-cell>
         <md-table-cell md-label="Description">
-          <fieldset :class="{ 'input-error': $v.editableRow.description.$invalid && table[index].isEditable }">
+          <fieldset :class="{ 'input-error': $v.editableData.description.$invalid && table[index].isEditable }">
             <input
               type="text"
               v-model.trim="item.description"
               :disabled="!item.isEditable"
               @change="changeData(index)"
             />
-            <div class="error" v-if="!$v.editableRow.description.required">Description is required.</div>
+            <div class="error" v-if="!$v.editableData.description.required">Description is required.</div>
           </fieldset>
         </md-table-cell>
         <md-table-cell class="table-actions" md-label="Actions">
@@ -121,7 +121,7 @@
             class="md-fab md-mini md-primary"
             title="Save"
             v-show="item.isEditable"
-            :disabled="$v.editableRow.$invalid"
+            :disabled="$v.editableData.$invalid"
             @click="saveData(index)"
           >
             <md-icon>save</md-icon>
@@ -130,7 +130,7 @@
             class="md-fab md-mini md-primary"
             title="Edit"
             v-show="!item.isEditable"
-            :disabled="disableEditBtn"
+            :disabled="isDisabledEditBtn"
             @click="editData(index)"
           >
             <md-icon>edit</md-icon>
@@ -138,7 +138,7 @@
           <md-button
             class="md-fab md-mini md-accent"
             title="Delete"
-            @click="isShowDeleteModal(item.id)"
+            @click="showDeleteModal(item.id)"
           >
             <md-icon>delete</md-icon>
           </md-button>
@@ -161,21 +161,20 @@ export default {
     id: null,
     isShowAddDataModal: false,
     isShowDeleteModal: false,
-    saveDisabled: false,
     table: [],
-    form: {
+    data: {
       name: '',
       email: '',
       description: '',
     },
-    editableRow: {
+    editableData: {
       name: '',
       email: '',
       description: '',
     },
   }),
   validations: {
-    form: {
+    data: {
       name: {
         required,
       },
@@ -187,7 +186,7 @@ export default {
         required,
       },
     },
-    editableRow: {
+    editableData: {
       name: {
         required,
       },
@@ -201,8 +200,8 @@ export default {
     },
   },
   computed: {
-    disableEditBtn() {
-      return !!this.editableRow.isEditable;
+    isDisabledEditBtn() {
+      return Boolean(this.editableData.isEditable);
     },
   },
   methods: {
@@ -216,19 +215,19 @@ export default {
       SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
     async addData() {
-      this.$v.form.$touch();
-      if (!this.$v.form.$invalid) {
+      this.$v.data.$touch();
+      if (!this.$v.data.$invalid) {
         const data = {
-          name: this.form.name,
-          email: this.form.email,
-          description: this.form.description,
+          name: this.data.name,
+          email: this.data.email,
+          description: this.data.description,
         };
         await this.ADD_DATA(data)
           .then(() => {
             //Reset fields
             this.$v.$reset();
-            for (let key in this.form) {
-              this.form[key] = '';
+            for (let key in this.data) {
+              this.data[key] = '';
             }
             this.isShowAddDataModal = false;
             this.SHOW_NOTIFICATION('Added new data to table');
@@ -245,14 +244,14 @@ export default {
       this.changeData(index);
     },
     changeData(index) {
-      this.editableRow = {...this.table[index]};
+      this.editableData = {...this.table[index]};
     },
     async saveData(index) {
       this.table[index].isEditable = false;
       await this.EDIT_DATA(this.table[index])
         .then(() => {
           this.SHOW_NOTIFICATION('Changed current row');
-          this.editableRow = [];
+          this.editableData = [];
         })
         .catch((error) => {
           this.SHOW_NOTIFICATION(error);
@@ -261,7 +260,7 @@ export default {
       //NOTE: Fetch & update the data
       await this.updateData();
     },
-    isShowDeleteModal(id) {
+    showDeleteModal(id) {
       this.isShowDeleteModal = true;
       this.id = id;
     },

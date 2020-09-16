@@ -53,27 +53,27 @@
       @submit.prevent="addPost"
       novalidate
     >
-      <fieldset :class="{ 'input-error': $v.form.title.$error }">
+      <fieldset :class="{ 'input-error': $v.post.title.$error }">
         <label>Post title</label>
         <input
           type="text"
-          v-model="form.title"
-          @change="$v.form.title.$touch()"
+          v-model="post.title"
+          @change="$v.post.title.$touch()"
         />
-        <div class="error" v-if="!$v.form.title.required">Title is required.</div>
+        <div class="error" v-if="!$v.post.title.required">Title is required.</div>
       </fieldset>
-      <fieldset :class="{ 'input-error': $v.form.description.$error }">
+      <fieldset :class="{ 'input-error': $v.post.description.$error }">
         <label>Post description</label>
         <input
           type="text"
-          v-model="form.description"
-          @change="$v.form.description.$touch()"
+          v-model="post.description"
+          @change="$v.post.description.$touch()"
         />
-        <div class="error" v-if="!$v.form.description.required">Description is required.</div>
+        <div class="error" v-if="!$v.post.description.required">Description is required.</div>
       </fieldset>
       <md-button
         type="submit"
-        :disabled="$v.form.$invalid"
+        :disabled="$v.post.$invalid"
         class="md-raised"
       >Add</md-button>
     </form>
@@ -113,7 +113,7 @@ export default {
       });
   },
   data: () => ({
-    form: {
+    post: {
       title: '',
       description: '',
     },
@@ -127,7 +127,7 @@ export default {
     isShowDeleteModal: false,
   }),
   validations: {
-    form: {
+    post: {
       title: {
         required,
       },
