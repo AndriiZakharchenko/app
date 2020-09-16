@@ -211,6 +211,10 @@ fieldset:not(.input-error) .error {
   z-index: 100;
 }
 
+.md-dialog-container {
+  overflow-y: auto !important;
+}
+
 
 /*================================================================================
 PRELOADER

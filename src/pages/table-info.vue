@@ -316,6 +316,10 @@ export default {
     justify-content: flex-end;
   }
 
+  >>> .md-table-head:last-child {
+    text-align: right;
+  }
+
   >>> .md-table .error {
     position: absolute;
     bottom: 0;
