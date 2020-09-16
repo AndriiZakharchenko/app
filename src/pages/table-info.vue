@@ -130,7 +130,7 @@
             class="md-fab md-mini md-primary"
             title="Edit"
             v-show="!item.isEditable"
-            :disabled="isDisabledEditBtn"
+            :disabled="isEnabledEditBtn"
             @click="editData(index)"
           >
             <md-icon>edit</md-icon>
@@ -200,7 +200,7 @@ export default {
     },
   },
   computed: {
-    isDisabledEditBtn() {
+    isEnabledEditBtn() {
       return Boolean(this.editableData.isEditable);
     },
   },
