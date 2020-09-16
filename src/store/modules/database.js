@@ -8,7 +8,7 @@ export default {
   getters: {},
   actions: {
     async ADD_POST({commit, dispatch, rootState}, payload) {
-      commit('app/SET_LOADING', true, { root: true });
+      commit('app/SHOW_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/posts`).push(payload)
         .then(() => {
@@ -18,11 +18,11 @@ export default {
           throw error;
         })
         .finally(() => {
-          commit('app/SET_LOADING', false, { root: true });
+          commit('app/SHOW_LOADING', false, { root: true });
         });
     },
     async EDIT_POST({commit, dispatch, rootState}, {title, description, id}) {
-      commit('app/SET_LOADING', true, { root: true });
+      commit('app/SHOW_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/posts`).child(id).update({
         title,
@@ -35,11 +35,11 @@ export default {
           throw error;
         })
         .finally(() => {
-          commit('app/SET_LOADING', false, { root: true });
+          commit('app/SHOW_LOADING', false, { root: true });
         });
     },
     async DELETE_POST({commit, dispatch, rootState}, id) {
-      commit('app/SET_LOADING', true, { root: true });
+      commit('app/SHOW_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/posts`).child(id).remove()
         .then(() => {
@@ -49,19 +49,19 @@ export default {
           throw error;
         })
         .finally(() => {
-          commit('app/SET_LOADING', false, { root: true });
+          commit('app/SHOW_LOADING', false, { root: true });
         });
     },
     async GET_POSTS({commit, rootState}) {
-      commit('app/SET_LOADING', true, { root: true });
+      commit('app/SHOW_LOADING', true, { root: true });
       const user = rootState.user.user;
       await firebase.database().ref(`users/${user}/posts`).once('value')
         .then((response) => {
           const tasksArray = [];
           const tasks = response.val();
+          // NOTE: the firebase send the object with unique id for each posts
+          // we create new array and add the unique id to the each post
           if (tasks) {
-            // the firebase send the object with unique id for each posts
-            // we create new array and add the unique id to the each post
             for (let key in tasks) {
               tasksArray.push({
                 ...tasks[key],
@@ -75,7 +75,7 @@ export default {
           throw error;
         })
         .finally(() => {
-          commit('app/SET_LOADING', false, { root: true });
+          commit('app/SHOW_LOADING', false, { root: true });
         });
     },
   },

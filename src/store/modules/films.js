@@ -32,7 +32,7 @@ export default {
         case FILM_FILTERS.active:
           return state.films.filter(film => !film.isCompleted);
         default:
-          return state.films.films;
+          return state.films;
         }
       };
     },

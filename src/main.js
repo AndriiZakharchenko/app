@@ -4,8 +4,8 @@ import router from './router';
 import store from './store';
 import firebase from 'firebase/app';
 
-import './plugins';
-import '../src/assets/main.scss';
+import '@/plugins';
+import '@/assets/main.scss';
 
 Vue.config.productionTip = false;
 

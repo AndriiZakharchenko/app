@@ -34,7 +34,7 @@ import { required } from 'vuelidate/lib/validators';
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'create-task',
+  name: 'add-film',
   data: () => ({
     title: '',
     description: '',
@@ -50,7 +50,7 @@ export default {
   methods: {
     ...mapMutations({
       ADD_FILM: 'films/ADD_FILM',
-      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
     ADD_FILMData() {
       this.$v.$touch();
@@ -61,7 +61,7 @@ export default {
           completed: false,
         };
         this.ADD_FILM(film);
-        this.CHANGE_STATUS('Added new film');
+        this.SHOW_NOTIFICATION('Added new film');
         setTimeout(() => {
           this.$router.push('/');
         }, 1000);

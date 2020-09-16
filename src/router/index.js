@@ -6,8 +6,8 @@ import Home from '@/pages/home.vue';
 
 Vue.use(VueRouter);
 
-const UserProfile = { render(h) {return h('div', 'Profile');}};
-const UserPosts = { render(h) {return h('div', 'User');}};
+const ROUTER_PROFILE = { render(h) {return h('div', 'Profile');}};
+const ROTER_USER = { render(h) {return h('div', 'User');}};
 
 const routes = [
   {
@@ -16,14 +16,14 @@ const routes = [
     component: Home,
   },
   {
-    path: '/create-task',
-    name: 'create-task',
-    component: () => import('@/pages/create-task.vue'),
+    path: '/add-film',
+    name: 'add-film',
+    component: () => import('@/pages/add-film.vue'),
   },
   {
-    path: '/database',
-    name: 'database',
-    component: () => import('@/pages/database.vue'),
+    path: '/posts',
+    name: 'posts',
+    component: () => import('@/pages/posts.vue'),
   },
   {
     path: '/vee-validate',
@@ -43,12 +43,12 @@ const routes = [
       {
         path: 'profile',
         name: 'profile',
-        component: UserProfile,
+        component: ROUTER_PROFILE,
       },
       {
-        path: 'posts',
-        name: 'posts',
-        component: UserPosts,
+        path: 'user',
+        name: 'user',
+        component: ROTER_USER,
       },
     ],
   },
@@ -66,9 +66,9 @@ const routes = [
     },
   },
   {
-    path: '/registration',
-    name: 'registration',
-    component: () => import('@/pages/registration.vue'),
+    path: '/sign-up',
+    name: 'sign-up',
+    component: () => import('@/pages/sign-up.vue'),
     meta: {
       authPage: true,
     },

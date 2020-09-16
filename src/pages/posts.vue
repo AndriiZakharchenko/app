@@ -1,55 +1,58 @@
 <template>
   <div>
-    <h1>Database</h1>
-    <md-dialog :md-active.sync="showDeleteDialog">
+    <h1>Posts</h1>
+    <md-dialog :md-active.sync="isShowDeleteModal">
       <md-dialog-title>Are you sure?</md-dialog-title>
       <md-dialog-actions>
         <md-button
           class="md-primary"
-          @click="showDeleteDialog = false"
+          @click="isShowDeleteModal = false"
         >Close</md-button>
         <md-button
           class="md-primary"
           type="submit"
-          @click.native="onDELETE_POST"
+          @click.native="deletePost"
         >Delete</md-button>
       </md-dialog-actions>
     </md-dialog>
 
-    <md-dialog :md-active.sync="showEditDialog">
+    <md-dialog :md-active.sync="isShowEditModal">
       <md-dialog-title>Post editing</md-dialog-title>
       <form novalidate>
-        <fieldset :class="{ 'input-error': $v.formEdit.title.$error }">
+        <fieldset :class="{ 'input-error': $v.editablePost.title.$error }">
           <label>Post title</label>
           <input
             type="text"
-            v-model="formEdit.title"
-            @change="$v.formEdit.title.$touch()"
+            v-model="editablePost.title"
+            @change="$v.editablePost.title.$touch()"
           />
-          <div class="error" v-if="!$v.formEdit.title.required">Title is required.</div>
+          <div class="error" v-if="!$v.editablePost.title.required">Title is required.</div>
         </fieldset>
-        <fieldset :class="{ 'input-error': $v.formEdit.description.$error }">
+        <fieldset :class="{ 'input-error': $v.editablePost.description.$error }">
           <label>Post description</label>
           <input
             type="text"
-            v-model="formEdit.description"
-            @change="$v.formEdit.description.$touch()"
+            v-model="editablePost.description"
+            @change="$v.editablePost.description.$touch()"
           />
-          <div class="error" v-if="!$v.formEdit.description.required">Description is required.</div>
+          <div class="error" v-if="!$v.editablePost.description.required">Description is required.</div>
         </fieldset>
       </form>
       <md-dialog-actions>
-        <md-button class="md-primary" @click="showEditDialog = false">Close</md-button>
+        <md-button class="md-primary" @click="isShowEditModal = false">Close</md-button>
         <md-button
           class="md-primary"
           type="submit"
-          :disabled="$v.formEdit.$invalid"
-          @click.native="onEDIT_POST"
+          :disabled="$v.editablePost.$invalid"
+          @click.native="editPost"
         >Save</md-button>
       </md-dialog-actions>
     </md-dialog>
 
-    <form @submit.prevent="onSubmit" novalidate>
+    <form
+      @submit.prevent="addPost"
+      novalidate
+    >
       <fieldset :class="{ 'input-error': $v.form.title.$error }">
         <label>Post title</label>
         <input
@@ -101,12 +104,12 @@ import { required } from 'vuelidate/lib/validators';
 import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
-  name: 'database',
+  name: 'posts',
   async created() {
     await this.GET_POSTS()
       .then(() => {})
       .catch((error) => {
-        this.CHANGE_STATUS(error);
+        this.SHOW_NOTIFICATION(error);
       });
   },
   data: () => ({
@@ -114,14 +117,14 @@ export default {
       title: '',
       description: '',
     },
-    formEdit: {
+    editablePost: {
       title: '',
       description: '',
       id: '',
     },
     id: null,
-    showEditDialog: false,
-    showDeleteDialog: false,
+    isShowEditModal: false,
+    isShowDeleteModal: false,
   }),
   validations: {
     form: {
@@ -132,7 +135,7 @@ export default {
         required,
       },
     },
-    formEdit: {
+    editablePost: {
       title: {
         required,
       },
@@ -144,8 +147,6 @@ export default {
   computed: {
     ...mapState({
       posts: state => state.database.posts,
-      showStatus: state => state.app.showStatus,
-      status: state => state.app.status,
     }),
   },
   methods: {
@@ -156,9 +157,9 @@ export default {
       DELETE_POST: 'database/DELETE_POST',
     }),
     ...mapMutations({
-      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
-    async onSubmit() {
+    async addPost() {
       this.$v.form.$touch();
       if (!this.$v.form.$invalid) {
         const post = {
@@ -169,50 +170,49 @@ export default {
           .then(() => {
             //Reset fields
             this.$v.$reset();
-            let form = this.form;
-            for (let key in form) {
-              form[key] = '';
+            for (let key in this.form) {
+              this.form[key] = '';
             }
-            this.CHANGE_STATUS('Added new post');
+            this.SHOW_NOTIFICATION('Added new post');
           })
           .catch((error) => {
-            this.CHANGE_STATUS(error);
+            this.SHOW_NOTIFICATION(error.message);
           });
       }
     },
     showEditModal(post) {
-      this.showEditDialog = true;
-      Object.assign(this.formEdit, post);
+      this.isShowEditModal = true;
+      Object.assign(this.editablePost, post);
     },
-    async onEDIT_POST() {
-      this.$v.formEdit.$touch();
-      if (!this.$v.formEdit.$invalid) {
-        await this.EDIT_POST(this.formEdit)
+    async editPost() {
+      this.$v.editablePost.$touch();
+      if (!this.$v.editablePost.$invalid) {
+        await this.EDIT_POST(this.editablePost)
           .then(() => {
-            this.CHANGE_STATUS('Changed current post');
+            this.SHOW_NOTIFICATION('Changed current post');
           })
           .catch((error) => {
-            this.CHANGE_STATUS(error);
+            this.SHOW_NOTIFICATION(error.message);
           })
           .finally(() => {
-            this.showEditDialog = false;
+            this.isShowEditModal = false;
           });
       }
     },
     showDeleteModal(id) {
-      this.showDeleteDialog = true;
+      this.isShowDeleteModal = true;
       this.id = id;
     },
-    async onDELETE_POST() {
+    async deletePost() {
       await this.DELETE_POST(this.id)
         .then(() => {
-          this.CHANGE_STATUS('Deleted current post');
+          this.SHOW_NOTIFICATION('Deleted current post');
         })
         .catch((error) => {
-          this.CHANGE_STATUS(error);
+          this.SHOW_NOTIFICATION(error);
         })
         .finally(() => {
-          this.showDeleteDialog = false;
+          this.isShowDeleteModal = false;
         });
     },
   },

@@ -78,12 +78,12 @@ export default {
       LOGIN_USER: 'user/LOGIN_USER',
     }),
     ...mapMutations({
-      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
     async onSubmit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.CHANGE_STATUS('Please enter the valid values in the form');
+        this.SHOW_NOTIFICATION('Please enter the valid values in the form');
       } else {
         const user = {
           email: this.email,
@@ -91,11 +91,11 @@ export default {
         };
         await this.LOGIN_USER(user)
           .then(() => {
-            this.CHANGE_STATUS('Logging');
+            this.SHOW_NOTIFICATION('Logging');
             this.$router.push('/');
           })
           .catch((error) => {
-            this.CHANGE_STATUS(error.message);
+            this.SHOW_NOTIFICATION(error.message);
           });
       }
     },

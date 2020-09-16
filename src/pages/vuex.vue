@@ -7,10 +7,10 @@
     </form>
     <md-button
       class="md-raised"
-      @click="getLists"
+      @click="getPosts"
     >
       <span v-if="isLoading">Loading...</span>
-      <span v-else>Get posts </span>
+      <span v-else>Get posts</span>
     </md-button>
     <ul class="post-list">
       <li v-for="(post, i) in posts" :key="i">
@@ -28,8 +28,8 @@ export default {
   name: 'vuex-page',
   computed: {
     ...mapState ({
-      isLoading: state => state.app.isLoading,
       posts: state => state.posts.posts,
+      isLoading: state => state.app.isLoading,
     }),
     message: {
       get() {
@@ -42,14 +42,14 @@ export default {
   },
   methods: {
     ...mapMutations({
-      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
       UPDATE_MESSAGE: 'posts/UPDATE_MESSAGE',
     }),
-    async getLists() {
+    async getPosts() {
       await this.$store.dispatch('posts/GET_POSTS')
         .then(() => {})
         .catch((error) => {
-          this.CHANGE_STATUS(error);
+          this.SHOW_NOTIFICATION(error);
         });
     },
   },

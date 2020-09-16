@@ -13,7 +13,7 @@ export default {
     date: null,
   }),
   mounted() {
-    const options = {
+    const timeOptions = {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
@@ -22,13 +22,13 @@ export default {
       second: 'numeric',
       hour12: false,
     };
-    const interval = setInterval(() => {
-      this.date = new Intl.DateTimeFormat('en-GB', options).format(new Date());
+    let setCurrentTime = setInterval(() => {
+      this.date = new Intl.DateTimeFormat('en-GB', timeOptions).format(new Date());
     }, 1000);
 
     // Memory leak optimization
     this.$once('hook:beforeDestroy', () => {
-      clearInterval(interval);
+      clearInterval(setCurrentTime);
     });
   },
 };

@@ -4,7 +4,7 @@
     <div
       v-if="showPreloader"
       class="icon-load"
-      :class="{'active': preloader}"
+      :class="{'active': showPreloaderAnimation}"
     >
       <div class="sk-folding-cube">
         <div class="sk-cube1 sk-cube"></div>
@@ -20,10 +20,10 @@
       class="md-theme-demo-light"
       md-position="center"
       md-persistent
-      :md-duration="statusDuration"
-      :md-active.sync="showStatus"
+      :md-duration="notificationDuration"
+      :md-active.sync="showNotification"
     >
-      <span>{{ status }}</span>
+      <span>{{ notificationMessage }}</span>
     </md-snackbar>
     <!-- NOTIFICATION EOF-->
 
@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import TheHeader from './components/TheHeader';
-import TheFooter from './components/TheFooter';
+import TheHeader from '@/components/TheHeader';
+import TheFooter from '@/components/TheFooter';
 import { mapState } from 'vuex';
 
 export default {
@@ -48,32 +48,30 @@ export default {
     TheHeader,
   },
   mounted() {
-    if (this.preloader) {
+    if (this.showPreloader) {
       setTimeout(() => {
-        this.$store.commit('app/REMOVE_PRELOADER');
+        this.showPreloaderAnimation = false;
       }, 1000);
       setTimeout(() => {
-        this.showPreloader = false;
+        this.$store.commit('app/HIDE_PRELOADER');
       }, 1500);
     }
   },
   data: () => ({
-    showPreloader: true,
-    statusDuration: 4000,
+    showPreloaderAnimation: true,
+    notificationDuration: 3000,
   }),
   computed: {
     ...mapState({
-      preloader: state => state.app.preloader,
-      status: state => state.app.status,
+      showPreloader: state => state.app.showPreloader,
+      notificationMessage: state => state.app.notificationMessage,
     }),
-    showStatus: {
+    showNotification: {
       get() {
-        return this.$store.state.app.showStatus;
+        return this.$store.state.app.showNotification;
       },
       set(val) {
-        setTimeout(() => {
-          this.$store.commit('app/CLEAR_STATUS', val);
-        }, this.statusDuration);
+        this.$store.commit('app/HIDE_NOTIFICATION', val);
       },
     },
   },

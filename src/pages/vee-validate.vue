@@ -2,12 +2,12 @@
   <div>
     <h1>Vee validate</h1>
     <validation-observer
-      v-slot="{ handleSubmit }"
+      v-slot="{ invalid }"
       tag="div"
     >
       <form
         class="vee-form"
-        @submit.prevent="handleSubmit(onSubmit)"
+        @submit.prevent="validateForm"
         novalidate
       >
         <validation-provider
@@ -47,6 +47,7 @@
         <md-button
           type="submit"
           class="md-raised"
+          :disabled="invalid"
         >Check the field</md-button>
       </form>
     </validation-observer>
@@ -61,7 +62,7 @@ export default {
     email: '',
   }),
   methods: {
-    onSubmit() {
+    validateForm() {
       alert('Form has been submitted!');
     },
   },

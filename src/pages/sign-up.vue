@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Registration</h1>
+    <h1>Sign up</h1>
     <form @submit.prevent="onSubmit">
       <fieldset :class="{ 'input-error': $v.email.$error }">
         <label for="email">Email</label>
@@ -67,7 +67,7 @@ import { mapState, mapActions, mapMutations } from 'vuex';
 import { email, sameAs, minLength, required } from 'vuelidate/lib/validators';
 
 export default {
-  name: 'registration',
+  name: 'sign-up',
   data: () => ({
     email: '',
     password: '',
@@ -96,12 +96,12 @@ export default {
       REGISTER_USER: 'user/REGISTER_USER',
     }),
     ...mapMutations({
-      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
     async onSubmit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.CHANGE_STATUS('Please enter the valid values in the form');
+        this.SHOW_NOTIFICATION('Please enter the valid values in the form');
       } else {
         const user = {
           email: this.email,
@@ -109,11 +109,11 @@ export default {
         };
         await this.REGISTER_USER(user)
           .then(() => {
-            this.CHANGE_STATUS('Registered');
+            this.SHOW_NOTIFICATION('Registered');
             this.$router.push('/');
           })
           .catch((error) => {
-            this.CHANGE_STATUS(error);
+            this.SHOW_NOTIFICATION(error.message);
           });
       }
     },

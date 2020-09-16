@@ -54,7 +54,7 @@ export default {
     const message = this.$route.query.message;
     const messageBool = !!message;
     if (messageBool) {
-      this.CHANGE_STATUS(message);
+      this.SHOW_NOTIFICATION(message);
     }
 
     this.films = this.$store.getters['films/FILTER_FILMS'](FILM_FILTERS.all);
@@ -66,7 +66,7 @@ export default {
   }),
   methods: {
     ...mapMutations({
-      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
     FILTER_FILMS(val, event) {
       const filterElements = document.querySelectorAll('.filter-list a');

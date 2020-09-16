@@ -1,27 +1,27 @@
 export default {
   namespaced: true,
   state: {
-    status: '',
-    showStatus: false,
+    notificationMessage: '',
+    showNotification: false,
+    showPreloader: true,
     isLoading: false,
-    preloader: true,
   },
   getters: {},
   actions: {},
   mutations: {
-    REMOVE_PRELOADER(state) {
-      state.preloader = false;
+    HIDE_PRELOADER(state) {
+      state.showPreloader = false;
     },
-    SET_LOADING(state, payload) {
+    SHOW_LOADING(state, payload) {
       state.isLoading = payload;
     },
-    CHANGE_STATUS(state, payload) {
-      state.status = payload;
-      state.showStatus = true;
+    SHOW_NOTIFICATION(state, payload) {
+      state.notificationMessage = payload;
+      state.showNotification = true;
     },
-    CLEAR_STATUS(state) {
-      state.status = '';
-      state.showStatus = false;
+    HIDE_NOTIFICATION(state) {
+      state.notificationMessage = '';
+      state.showNotification = false;
     },
   },
 };

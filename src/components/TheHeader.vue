@@ -3,14 +3,14 @@
     <b>Authorized: {{ IS_AUTHENTICATED }}</b>
     <nav class="nav">
       <router-link
-        v-for="(link, i) in navLinks"
-        :key="i"
+        v-for="link in navLinks"
+        :key="link.name"
         :to="{ name: `${link.name}` }"
       >{{ link.label }}</router-link>
       <a
         href="#"
         v-if="IS_AUTHENTICATED"
-        @click.prevent="logout"
+        @click.prevent="logoutUser"
       >Log out</a>
     </nav>
   </header>
@@ -33,12 +33,12 @@ export default {
             label: 'Home',
           },
           {
-            name: 'create-task',
-            label: 'Create task',
+            name: 'add-film',
+            label: 'Add film',
           },
           {
-            name: 'database',
-            label: 'Database',
+            name: 'posts',
+            label: 'Posts',
           },
           {
             name: 'vee-validate',
@@ -64,8 +64,8 @@ export default {
             label: 'Login',
           },
           {
-            name: 'registration',
-            label: 'Registration',
+            name: 'sign-up',
+            label: 'Sign up',
           },
         ];
       }
@@ -76,16 +76,16 @@ export default {
       LOGOUT_USER: 'user/LOGOUT_USER',
     }),
     ...mapMutations({
-      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
-    async logout() {
+    async logoutUser() {
       await this.LOGOUT_USER()
         .then(() => {
-          this.CHANGE_STATUS('Logout');
+          this.SHOW_NOTIFICATION('Logout');
           this.$router.push({name: 'login'});
         })
         .catch((error) => {
-          this.CHANGE_STATUS(error);
+          this.SHOW_NOTIFICATION(error);
         });
     },
   },

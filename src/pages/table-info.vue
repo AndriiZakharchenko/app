@@ -1,23 +1,23 @@
 <template>
   <div>
-    <md-dialog :md-active.sync="showDeleteDialog">
+    <md-dialog :md-active.sync="isShowDeleteModal">
       <md-dialog-title>Are you sure?</md-dialog-title>
       <md-dialog-actions>
         <md-button
           class="md-primary"
-          @click="showDeleteDialog = false"
+          @click="isShowDeleteModal = false"
         >Close</md-button>
         <md-button
           class="md-primary"
           type="submit"
-          @click.native="onDELETE_DATA"
+          @click.native="deleteData"
         >Delete</md-button>
       </md-dialog-actions>
     </md-dialog>
 
-    <md-dialog :md-active.sync="showAddDialog">
+    <md-dialog :md-active.sync="isShowAddDataModal">
       <md-dialog-title>Add new data to table</md-dialog-title>
-      <form @submit.prevent="onSubmit" novalidate>
+      <form @submit.prevent="addData" novalidate>
         <fieldset :class="{ 'input-error': $v.form.name.$error }">
           <label>Name</label>
           <input
@@ -50,13 +50,12 @@
       <md-dialog-actions>
         <md-button
           class="md-primary"
-          @click="showAddDialog = false"
+          @click="isShowAddDataModal = false"
         >Close</md-button>
         <md-button
           type="submit"
           class="md-raised"
           :disabled="$v.form.$invalid"
-          @click="onSubmit"
         >Add Row</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -65,7 +64,7 @@
     <md-button
       type="button"
       class="md-raised"
-      @click="showAddDialog = true"
+      @click="isShowAddDataModal = true"
     >Add Row</md-button>
     <md-table
       v-model="table"
@@ -89,7 +88,7 @@
               type="text"
               v-model.trim="item.name"
               :disabled="!item.isEditable"
-              @change="onChangeData(index)"
+              @change="changeData(index)"
             />
             <div class="error" v-if="!$v.editableRow.name.required">Name is required.</div>
           </fieldset>
@@ -100,7 +99,7 @@
               type="email"
               v-model.trim="item.email"
               :disabled="!item.isEditable"
-              @change="onChangeData(index)"
+              @change="changeData(index)"
             />
             <div class="error" v-if="!$v.editableRow.email.required">Email is required.</div>
             <div class="error" v-if="!$v.editableRow.email.email">Email should be correct.</div>
@@ -112,7 +111,7 @@
               type="text"
               v-model.trim="item.description"
               :disabled="!item.isEditable"
-              @change="onChangeData(index)"
+              @change="changeData(index)"
             />
             <div class="error" v-if="!$v.editableRow.description.required">Description is required.</div>
           </fieldset>
@@ -123,7 +122,7 @@
             title="Save"
             v-show="item.isEditable"
             :disabled="$v.editableRow.$invalid"
-            @click="onSaveData(index)"
+            @click="saveData(index)"
           >
             <md-icon>save</md-icon>
           </md-button>
@@ -132,14 +131,14 @@
             title="Edit"
             v-show="!item.isEditable"
             :disabled="disableEditBtn"
-            @click="onEDIT_DATA(index)"
+            @click="editData(index)"
           >
             <md-icon>edit</md-icon>
           </md-button>
           <md-button
             class="md-fab md-mini md-accent"
             title="Delete"
-            @click="showDeleteModal(item.id)"
+            @click="isShowDeleteModal(item.id)"
           >
             <md-icon>delete</md-icon>
           </md-button>
@@ -160,8 +159,8 @@ export default {
   },
   data: () => ({
     id: null,
-    showAddDialog: false,
-    showDeleteDialog: false,
+    isShowAddDataModal: false,
+    isShowDeleteModal: false,
     saveDisabled: false,
     table: [],
     form: {
@@ -214,9 +213,9 @@ export default {
       GET_DATA: 'table/GET_DATA',
     }),
     ...mapMutations({
-      CHANGE_STATUS: 'app/CHANGE_STATUS',
+      SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
-    async onSubmit() {
+    async addData() {
       this.$v.form.$touch();
       if (!this.$v.form.$invalid) {
         const data = {
@@ -228,65 +227,66 @@ export default {
           .then(() => {
             //Reset fields
             this.$v.$reset();
-            let form = this.form;
-            for (let key in form) {
-              form[key] = '';
+            for (let key in this.form) {
+              this.form[key] = '';
             }
-            this.showAddDialog = false;
-            this.CHANGE_STATUS('Added new data to table');
+            this.isShowAddDataModal = false;
+            this.SHOW_NOTIFICATION('Added new data to table');
           })
           .catch((error) => {
-            this.CHANGE_STATUS(error);
+            this.SHOW_NOTIFICATION(error.message);
           });
 
         await this.updateData();
       }
     },
-    onEDIT_DATA(index) {
+    editData(index) {
       this.table[index].isEditable = true;
-      this.onChangeData(index);
+      this.changeData(index);
     },
-    onChangeData(index) {
+    changeData(index) {
       this.editableRow = {...this.table[index]};
     },
-    async onSaveData(index) {
+    async saveData(index) {
       this.table[index].isEditable = false;
       await this.EDIT_DATA(this.table[index])
         .then(() => {
-          this.CHANGE_STATUS('Changed current row');
+          this.SHOW_NOTIFICATION('Changed current row');
           this.editableRow = [];
         })
         .catch((error) => {
-          this.CHANGE_STATUS(error);
+          this.SHOW_NOTIFICATION(error);
         });
 
+      //NOTE: Fetch & update the data
       await this.updateData();
     },
-    showDeleteModal(id) {
-      this.showDeleteDialog = true;
+    isShowDeleteModal(id) {
+      this.isShowDeleteModal = true;
       this.id = id;
     },
-    async onDELETE_DATA() {
+    async deleteData() {
       await this.DELETE_DATA(this.id)
         .then(() => {
-          this.CHANGE_STATUS('Deleted current post');
+          this.SHOW_NOTIFICATION('Deleted current post');
         })
         .catch((error) => {
-          this.CHANGE_STATUS(error);
+          this.SHOW_NOTIFICATION(error);
         })
         .finally(() => {
-          this.showDeleteDialog = false;
+          this.isShowDeleteModal = false;
         });
 
+      //NOTE: Fetch & update the data
       await this.updateData();
     },
-    updateData() {
-      this.GET_DATA()
+    async updateData() {
+      await this.GET_DATA()
         .then((dataArray) => {
           this.table = dataArray;
         })
         .catch((error) => {
-          this.CHANGE_STATUS(error);
+          this.SHOW_NOTIFICATION(error);
         });
     },
   },
