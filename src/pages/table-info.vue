@@ -18,25 +18,23 @@
     <md-dialog :md-active.sync="isShowAddDataModal">
       <md-dialog-title>Add new data to table</md-dialog-title>
       <form @submit.prevent="addData" novalidate>
-        <fieldset :class="{ 'input-error': $v.data.name.$error }">
-          <label>Name</label>
-          <input
-            type="text"
-            v-model.trim="data.name"
-            @change="$v.data.name.$touch()"
-          />
-          <div class="error" v-if="!$v.data.name.required">Name is required.</div>
-        </fieldset>
-        <fieldset :class="{ 'input-error': $v.data.email.$error }">
-          <label>Email</label>
-          <input
-            type="email"
-            v-model.trim="data.email"
-            @change="$v.data.email.$touch()"
-          />
-          <div class="error" v-if="!$v.data.email.required">Email is required.</div>
-          <div class="error" v-if="!$v.data.email.email">Email should be correct.</div>
-        </fieldset>
+        <custom-input
+          label-name="Name"
+          input-type="text"
+          v-model="data.name"
+          :show-error-class="$v.data.name.$error"
+          :show-error-required="$v.data.name.required"
+          @changeInput="$v.data.name.$touch()"
+        />
+        <custom-input
+          label-name="Email"
+          input-type="email"
+          v-model="data.email"
+          :show-error-class="$v.data.email.$error"
+          :show-error-required="$v.data.email.required"
+          :show-error-email="$v.data.email.email"
+          @changeInput="$v.data.email.$touch()"
+        />
         <fieldset :class="{ 'input-error': $v.data.description.$error }">
           <label>Description</label>
           <input
@@ -151,9 +149,13 @@
 <script>
 import { required, email } from 'vuelidate/lib/validators';
 import { mapActions, mapMutations } from 'vuex';
+import CustomInput from '@/components/CustomInput';
 
 export default {
   name: 'table-info',
+  components: {
+    CustomInput,
+  },
   async created() {
     await this.updateData();
   },
