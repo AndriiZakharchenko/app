@@ -24,7 +24,7 @@
           v-model="data.name"
           :show-error-class="$v.data.name.$error"
           :show-error-required="$v.data.name.required"
-          @changeInput="$v.data.name.$touch()"
+          @change="$v.data.name.$touch()"
         />
         <custom-input
           label-name="Email"
@@ -33,7 +33,7 @@
           :show-error-class="$v.data.email.$error"
           :show-error-required="$v.data.email.required"
           :show-error-email="$v.data.email.email"
-          @changeInput="$v.data.email.$touch()"
+          @change="$v.data.email.$touch()"
         />
         <fieldset :class="{ 'input-error': $v.data.description.$error }">
           <label>Description</label>
