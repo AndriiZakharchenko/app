@@ -1,44 +1,34 @@
 <template>
   <div>
     <h1>Sign up</h1>
-    <form @submit.prevent="onSubmit">
-      <fieldset :class="{ 'input-error': $v.email.$error }">
-        <label for="email">Email</label>
+    <form
+      @submit.prevent="onSubmit"
+      novalidate
+    >
+      <form-group :validator="$v.email" label="Email">
         <input
           type="email"
-          id="email"
           placeholder="Enter your email"
-          v-model="email"
+          v-model.trim="email"
           @change="$v.email.$touch()"
         />
-        <div class="error" v-if="!$v.email.required">Password is required.</div>
-        <div class="error" v-if="!$v.email.email">Email should be correct.</div>
-      </fieldset>
-      <fieldset :class="{ 'input-error': $v.password.$error }">
-        <label for="password">Password</label>
+      </form-group>
+      <form-group :validator="$v.password" label="Password">
         <input
           type="password"
-          id="password"
           placeholder="Enter your password"
-          v-model="password"
+          v-model.trim="password"
           @change="$v.password.$touch()"
         />
-        <div class="error" v-if="!$v.password.required">Password is required.</div>
-        <div class="error" v-if="!$v.password.minLength">Password must have at least {{
-          $v.password.$params.minLength.min }} letters.
-        </div>
-      </fieldset>
-      <fieldset :class="{ 'input-error': $v.repeatPassword.$error }">
-        <label for="repeat-password">Repeat password</label>
+      </form-group>
+      <form-group :validator="$v.repeatPassword" label="Repeat password">
         <input
           type="password"
-          id="repeat-password"
           placeholder="Repeat your password"
-          v-model="repeatPassword"
+          v-model.trim="repeatPassword"
           @change="$v.repeatPassword.$touch()"
         />
-        <div class="error" v-if="!$v.repeatPassword.sameAsPassword">Passwords must be identical.</div>
-      </fieldset>
+      </form-group>
       <div class="button-wrap">
         <md-button
           class="md-raised"

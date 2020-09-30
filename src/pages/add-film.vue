@@ -1,25 +1,21 @@
 <template>
   <div>
     <h1>Add new film</h1>
-    <form @submit.prevent="ADD_FILMData">
-      <fieldset :class="{ 'input-error': $v.title.$error }">
-        <label>Film title</label>
+    <form @submit.prevent="addFilm">
+      <form-group :validator="$v.title" label="Film title">
         <input
           type="text"
-          v-model="title"
+          v-model.trim="title"
           @change="$v.title.$touch()"
         />
-        <div class="error" v-if="!$v.title.required">Title is required.</div>
-      </fieldset>
-      <fieldset :class="{ 'input-error': $v.description.$error }">
-        <label>Film description</label>
+      </form-group>
+      <form-group :validator="$v.description" label="Description">
         <input
           type="text"
-          v-model="description"
+          v-model.trim="description"
           @change="$v.description.$touch()"
         />
-        <div class="error" v-if="!$v.description.required">Description is required.</div>
-      </fieldset>
+      </form-group>
       <md-button
         type="submit"
         class="md-raised"
@@ -52,7 +48,7 @@ export default {
       ADD_FILM: 'films/ADD_FILM',
       SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
-    ADD_FILMData() {
+    addFilm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         const film = {

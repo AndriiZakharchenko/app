@@ -17,7 +17,10 @@
 
     <md-dialog :md-active.sync="isShowAddDataModal">
       <md-dialog-title>Add new data to table</md-dialog-title>
-      <form @submit.prevent="addData" novalidate>
+      <form
+        @submit.prevent="addData"
+        novalidate
+      >
         <form-group :validator="$v.data.name" label="Name">
           <input
             type="text"
@@ -27,7 +30,7 @@
         </form-group>
         <form-group :validator="$v.data.email" label="Email">
           <input
-            type="text"
+            type="email"
             v-model.trim="data.email"
             @change="$v.data.email.$touch()"
           />

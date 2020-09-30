@@ -18,59 +18,53 @@
 
     <md-dialog :md-active.sync="isShowEditModal">
       <md-dialog-title>Post editing</md-dialog-title>
-      <form novalidate>
-        <fieldset :class="{ 'input-error': $v.editablePost.title.$error }">
-          <label>Post title</label>
+      <form
+        @submit.native="editPost"
+        novalidate
+      >
+        <form-group :validator="$v.editablePost.title" label="Post title">
           <input
             type="text"
-            v-model="editablePost.title"
+            v-model.trim="editablePost.title"
             @change="$v.editablePost.title.$touch()"
           />
-          <div class="error" v-if="!$v.editablePost.title.required">Title is required.</div>
-        </fieldset>
-        <fieldset :class="{ 'input-error': $v.editablePost.description.$error }">
-          <label>Post description</label>
+        </form-group>
+        <form-group :validator="$v.editablePost.description" label="Post description">
           <input
             type="text"
-            v-model="editablePost.description"
+            v-model.trim="editablePost.description"
             @change="$v.editablePost.description.$touch()"
           />
-          <div class="error" v-if="!$v.editablePost.description.required">Description is required.</div>
-        </fieldset>
+        </form-group>
+        <md-dialog-actions>
+          <md-button class="md-primary" @click="isShowEditModal = false">Close</md-button>
+          <md-button
+            class="md-primary"
+            type="submit"
+            :disabled="$v.editablePost.$invalid"
+          >Save</md-button>
+        </md-dialog-actions>
       </form>
-      <md-dialog-actions>
-        <md-button class="md-primary" @click="isShowEditModal = false">Close</md-button>
-        <md-button
-          class="md-primary"
-          type="submit"
-          :disabled="$v.editablePost.$invalid"
-          @click.native="editPost"
-        >Save</md-button>
-      </md-dialog-actions>
     </md-dialog>
 
     <form
       @submit.prevent="addPost"
       novalidate
     >
-      <fieldset :class="{ 'input-error': $v.post.title.$error }">
-        <label>Post title</label>
+      <form-group :validator="$v.post.title" label="Post title">
         <input
           type="text"
-          v-model="post.title"
+          v-model.trim="post.title"
           @change="$v.post.title.$touch()"
         />
-        <div class="error" v-if="!$v.post.title.required">Title is required.</div>
-      </fieldset>
-      <fieldset :class="{ 'input-error': $v.post.description.$error }">
-        <label>Post description</label>
+      </form-group>
+      <form-group :validator="$v.post.description" label="Post description">
         <input
           type="text"
-          v-model="post.description"
+          v-model.trim="post.description"
           @change="$v.post.description.$touch()"
         />
-        <div class="error" v-if="!$v.post.description.required">Description is required.</div>
-      </fieldset>
+      </form-group>
       <md-button
         type="submit"
         :disabled="$v.post.$invalid"

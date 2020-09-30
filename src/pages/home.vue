@@ -5,15 +5,15 @@
       <a
         role="button"
         class="active"
-        @click="FILTER_FILMS(FILM_FILTERS.all, $event)"
+        @click="filterFilms(FILM_FILTERS.all, $event)"
       >All</a>
       <a
         role="button"
-        @click="FILTER_FILMS(FILM_FILTERS.completed, $event)"
+        @click="filterFilms(FILM_FILTERS.completed, $event)"
       >Completed</a>
       <a
         role="button"
-        @click="FILTER_FILMS(FILM_FILTERS.active, $event)"
+        @click="filterFilms(FILM_FILTERS.active, $event)"
       >Active</a>
     </div>
     <div
@@ -68,7 +68,7 @@ export default {
     ...mapMutations({
       SHOW_NOTIFICATION: 'app/SHOW_NOTIFICATION',
     }),
-    FILTER_FILMS(val, event) {
+    filterFilms(val, event) {
       const filterElements = document.querySelectorAll('.filter-list a');
       filterElements.forEach(elem => {
         elem.classList.remove('active');
