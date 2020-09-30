@@ -55,7 +55,6 @@
         </md-dialog-actions>
       </form>
     </md-dialog>
-
     <h1>Table-info</h1>
     <md-button
       type="button"
