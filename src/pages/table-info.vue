@@ -18,32 +18,27 @@
     <md-dialog :md-active.sync="isShowAddDataModal">
       <md-dialog-title>Add new data to table</md-dialog-title>
       <form @submit.prevent="addData" novalidate>
-        <custom-input
-          label-name="Name"
-          input-type="text"
-          v-model="data.name"
-          :show-error-class="$v.data.name.$error"
-          :show-error-required="$v.data.name.required"
-          @change="$v.data.name.$touch()"
-        />
-        <custom-input
-          label-name="Email"
-          input-type="email"
-          v-model="data.email"
-          :show-error-class="$v.data.email.$error"
-          :show-error-required="$v.data.email.required"
-          :show-error-email="$v.data.email.email"
-          @change="$v.data.email.$touch()"
-        />
-        <fieldset :class="{ 'input-error': $v.data.description.$error }">
-          <label>Description</label>
+        <form-group :validator="$v.data.name" label="Name">
+          <input
+            type="text"
+            v-model.trim="data.name"
+            @change="$v.data.name.$touch()"
+          />
+        </form-group>
+        <form-group :validator="$v.data.email" label="Email">
+          <input
+            type="text"
+            v-model.trim="data.email"
+            @change="$v.data.email.$touch()"
+          />
+        </form-group>
+        <form-group :validator="$v.data.description" label="Description">
           <input
             type="text"
             v-model.trim="data.description"
             @change="$v.data.description.$touch()"
           />
-          <div class="error" v-if="!$v.data.description.required">Description is required.</div>
-        </fieldset>
+        </form-group>
         <md-dialog-actions>
           <md-button
             class="md-primary"
@@ -149,13 +144,9 @@
 <script>
 import { required, email } from 'vuelidate/lib/validators';
 import { mapActions, mapMutations } from 'vuex';
-import CustomInput from '@/components/CustomInput';
 
 export default {
   name: 'table-info',
-  components: {
-    CustomInput,
-  },
   async created() {
     await this.updateData();
   },
