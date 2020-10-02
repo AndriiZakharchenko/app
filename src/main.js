@@ -3,6 +3,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import firebase from 'firebase/app';
+import axios from 'axios';
+Vue.prototype.$http = axios;
 
 import '@/plugins';
 import '@/assets/main.scss';

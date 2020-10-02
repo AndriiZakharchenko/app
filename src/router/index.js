@@ -58,6 +58,11 @@ const routes = [
     component: () => import('@/pages/table-info.vue'),
   },
   {
+    path: '/giphy',
+    name: 'giphy',
+    component: () => import('@/pages/giphy.vue'),
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/pages/login.vue'),

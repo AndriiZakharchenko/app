@@ -56,6 +56,10 @@ export default {
             name: 'table-info',
             label: 'Table-info',
           },
+          {
+            name: 'giphy',
+            label: 'Giphy',
+          },
         ];
       } else {
         return [
