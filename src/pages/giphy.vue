@@ -8,7 +8,7 @@
       <div class="fieldset">
         <input
           type="text"
-          v-model.trim="gifName"
+          v-model="gifName"
         />
         <md-button
           type="submit"
@@ -43,6 +43,11 @@ export default {
       gifs: [],
       limit: 6,
     };
+  },
+  watch: {
+    gifName() {
+      this.limit = 6;
+    },
   },
   methods: {
     ...mapMutations({
